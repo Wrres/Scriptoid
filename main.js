@@ -5,7 +5,7 @@ const RL = READLINE.createInterface({
 });
 
 const Discord = require("discord.js");
-const keepAlive = require("./server");
+//const keepAlive = require("./server");
 const Round = require("./utils/Round");
 const RoundCity = require("./utils/RoundCity");
 const RoundGuess = require("./utils/RoundGuess");
@@ -336,10 +336,13 @@ function removeChannelFromChannels(id) {
 	CHANNELS = CHANNELS.filter((channel) => { return channel.id != id; });
 }
 
+/*
 keepAlive().then(() => {
 	console.log(`${formatDate(new Date())} · Login attempt`);
 	client.login(process.env.TOKEN);
 });
+*/
+client.login(process.env.TOKEN);
 
 /**
  * Listen for commands on console
