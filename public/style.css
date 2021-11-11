@@ -1,0 +1,43 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+}
+
+body{
+	background-color: #101020;
+	color: aliceblue;
+	font-family: "Noto Sans Mono", monospace;
+}
+
+h1{
+	text-align: center;
+	padding-top: 24px;
+	padding-bottom: 12px;
+}
+h1 span{
+	color:  deepskyblue;
+}
+
+#help{
+	width: 80%;
+	margin: 0 auto;
+	background-color: #202030;
+	padding: 12px;
+	border-radius: 12px;
+	line-height: 1.75rem;
+}
+
+.command{
+	background-color: #101020;
+	color:  deepskyblue;
+	padding: 2px 8px;
+	border-radius: 8px;
+}
+
+#footer{
+	text-align: center;
+	font-size: 12px;
+	margin-top: 48px;
+	margin-bottom: 48px;
+}
