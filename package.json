@@ -1,0 +1,18 @@
+{
+	"name": "Scяiptoid",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"dependencies": {
+		"@replit/database": "^2.0.0",
+		"discord.js": "^12.5.1",
+		"express": "^4.17.1"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"start": "node index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
