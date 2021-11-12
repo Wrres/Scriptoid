@@ -138,7 +138,7 @@ class RoundGuess {
 					// User exists and his lastRound is lower than currentRound
 					// We can tell him to try again
 					if (user.lastRound < this.currentRound) {
-						msg.reply(`your guess is not a coordinate. Check it and paste again.`);
+						msg.reply(`your guess is not a coordinate. Check it and post again.`);
 					}
 				}
 				// User doesn't exist
