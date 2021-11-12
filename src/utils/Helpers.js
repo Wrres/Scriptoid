@@ -1,5 +1,6 @@
 const EventEmitter = require("events");
 const { MessageEmbed } = require("discord.js");
+const FETCH = require("node-fetch");
 
 const HELPERS = {
 	SECONDS_AFTER_ANSWER: 3,
@@ -84,7 +85,7 @@ const HELPERS = {
 		msg.reply(messageEmbed);
 	},
 	sendMapMessage: (msg) => {
-		msg.channel.send("Guessing map: <https://bit.ly/3qn906b> (click on the map and paste here)");
+		msg.channel.send("Guessing map: <https://bit.ly/GuessingMap> (click on the map and paste here)");
 	},
 	getDistanceFromLatLonInKm: (lat1, lon1, lat2, lon2) => {
 		let R = 6371; // Radius of the earth in km
@@ -129,8 +130,27 @@ const HELPERS = {
 			return rounds;
 		}
 		return 1;
+	},
+	getElevation: (lat, lng) => {
+		return new Promise((resolve, reject) => {
+			FETCH(`https://api.opentopodata.org/v1/aster30m?locations=${lat},${lng}`)
+				.then((response) => response.json())
+				.then((data) => {
+					if(data.status === "OK"){
+						resolve(HELPERS.numberWithCommas(data.results[0].elevation));
+					}
+					else{
+						resolve(null);
+					}
+				})
+				.catch((error) => {
+					resolve(null);
+				});
+		});
+	},
+	numberWithCommas: (x) => {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
-
 }
 
 module.exports = HELPERS;

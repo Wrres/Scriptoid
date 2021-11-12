@@ -1,11 +1,13 @@
+require("dotenv").config();
 const READLINE = require("readline");
 const RL = READLINE.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
 
+//const runServer = require("./Server");
 const Discord = require("discord.js");
-//const keepAlive = require("./server");
+
 const Round = require("./utils/Round");
 const RoundCity = require("./utils/RoundCity");
 const RoundGuess = require("./utils/RoundGuess");
@@ -55,26 +57,26 @@ const IGNORES = ["@", "!", "<"];
 // Holding to channels where the bot is running and it's data for each
 let CHANNELS = [];
 
-const client = new Discord.Client();
+const CLIENT = new Discord.Client();
 
-client.on("ready", () => {
-	console.log(`${formatDate(new Date())} · Logged in as ${client.user.tag}!`);
-	client.user.setActivity('he!p for help', { type: 'PLAYING' });
+CLIENT.on("ready", () => {
+	console.log(`${formatDate(new Date())} · Logged in as ${CLIENT.user.tag}!`);
+	CLIENT.user.setActivity('he!p for help', { type: 'PLAYING' });
 });
 
-client.on("error", (error) => {
+CLIENT.on("error", (error) => {
 	console.log(`Error: ${error}`);
-	client.destroy();
-	client.login(process.env.TOKEN);
+	CLIENT.destroy();
+	CLIENT.login(process.env.TOKEN);
 });
 
-client.on("invalidated", (invalidated) => {
+CLIENT.on("invalidated", (invalidated) => {
 	console.log(`Invalidated: ${invalidated}`);
-	client.destroy();
-	client.login(process.env.TOKEN);
+	CLIENT.destroy();
+	CLIENT.login(process.env.TOKEN);
 });
 
-client.on("message", (msg) => {
+CLIENT.on("message", (msg) => {
 	if (msg.author.bot) return
 
 	// HELP
@@ -337,12 +339,12 @@ function removeChannelFromChannels(id) {
 }
 
 /*
-keepAlive().then(() => {
+runServer().then(() => {
 	console.log(`${formatDate(new Date())} · Login attempt`);
-	client.login(process.env.TOKEN);
+	CLIENT.login(process.env.TOKEN);
 });
 */
-client.login(process.env.TOKEN);
+CLIENT.login(process.env.TOKEN);
 
 /**
  * Listen for commands on console
