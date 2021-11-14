@@ -138,7 +138,7 @@ class RoundGuess {
 					// User exists and his lastRound is lower than currentRound
 					// We can tell him to try again
 					if (user.lastRound < this.currentRound) {
-						msg.reply(`your guess is not a coordinate. Check it and paste again.`);
+						msg.reply(`your guess is not a coordinate. Check it and post again.`);
 					}
 				}
 				// User doesn't exist
@@ -231,17 +231,18 @@ class RoundGuess {
 			}
 		});
 
-		let roundsPadding = this.totalRounds > 9 ? 2 : 1;
-		let distancesPadding = 0;
+		let roundsPadding = 0;
+        let distancesPadding = 0;
 
-		this.users.forEach((user) => {
-			distancesPadding = distancesPadding < user.distance.toFixed(2).toString().length ? user.distance.toFixed(2).toString().length : distancesPadding;
-		});
+        this.users.forEach((user) => {
+            roundsPadding = roundsPadding < user.rounds.toString().length ? user.rounds.toString().length : roundsPadding;
+            distancesPadding = distancesPadding < user.distance.toFixed(2).toString().length ? user.distance.toFixed(2).toString().length : distancesPadding;
+        });
 
-		this.users.forEach((user, index) => {
-			let medal = this.medals[index] ? this.medals[index] : "";
-			summary += `📏 \`${user.distance.toFixed(2).toString().padStart(distancesPadding, " ")} km\` · 📍 \`${user.rounds.toString().padStart(roundsPadding, " ")}\` · ${user.username} ${medal}\n`;
-		});
+        this.users.forEach((user, index) => {
+            let medal = this.medals[index] ? this.medals[index] : "";
+            summary += `📏 \`${user.distance.toFixed(2).toString().padStart(distancesPadding, " ")} km\` · 📍 \`${user.rounds.toString().padStart(roundsPadding, " ")}\` · ${user.username} ${medal}\n`;
+        });
 		if (summary != "") {
 			const messageEmbed = new MessageEmbed()
 				.setColor("#0099ff")
