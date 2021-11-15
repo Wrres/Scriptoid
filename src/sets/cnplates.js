@@ -3,7 +3,7 @@ const CNPLATES = {
 	"footer": "Write the province the given plate is from.",
 	"sets": [
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/ningxiahui2016.jpg", "answers": ["Ningxia"] },
-		{ "letter": "http://www.plateshack.com/y2k/PRChina/chongquing2016.jpg", "answers": ["Chonqing"] },
+		{ "letter": "http://www.plateshack.com/y2k/PRChina/chongquing2016.jpg", "answers": ["Chongqing"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/gansu2016.jpg", "answers": ["Gansu"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinaanhui.jpg", "answers": ["Anhui"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinafujian2.jpg", "answers": ["Fujian"] },
@@ -17,7 +17,7 @@ const CNPLATES = {
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinajiangxi.jpg", "answers": ["Jiangxi"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinajilin.jpg", "answers": ["Jilin"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinaliaoning.jpg", "answers": ["Liaoning"] },
-		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinaneimenggu.jpg", "answers": ["Sichuan"] },
+		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinasichuan.jpg", "answers": ["Sichuan"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinazhejiang.jpg", "answers": ["Zhejiang"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinaxizangtibet2014.jpg", "answers": ["Xizang", "Tibet"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinatianjin2014.jpg", "answers": ["Tianjin"] },
