@@ -122,13 +122,13 @@ class RoundGuess {
 					// User exists and his lastRound is lower than currentRound
 					// We can register his guess once
 					if (user.lastRound < this.currentRound) {
-						msg.channel.send(`*\`${msg.author.username}\` has guessed.*`);
+						msg.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
 						this.addCorrect(msg, distance);
 					}
 				}
 				// User doesn't exist
 				else {
-					msg.channel.send(`*\`${msg.author.username}\` has guessed.*`);
+					msg.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
 					this.addCorrect(msg, distance);
 				}
 			}

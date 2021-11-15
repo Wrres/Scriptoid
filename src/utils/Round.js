@@ -85,7 +85,7 @@ class Round {
 				this.addCorrect(msg);
 				msg.react("✅");
 				// Chinese round
-				if(this.language.footer.includes("Chinese character")){
+				if(this.language.footer.includes("Chinese character") || this.language.footer.includes("Inuktitut word")){
 					let set = this.currentSet;
 					setTimeout(() => {
 						msg.channel.send(`Correct! \`${set.letter}\` is ${set.answers.join(", ")}.`);

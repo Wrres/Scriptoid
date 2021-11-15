@@ -32,6 +32,7 @@ const CHINESE3 = require("./sets/chinese3.js");
 const CHINESE4 = require("./sets/chinese4.js");
 const CHINESE5 = require("./sets/chinese5.js");
 const INUKTITUT = require("./sets/inuktitut.js");
+const INUKWORDS = require("./sets/inukwords.js");
 const INDONESIAN = require("./sets/indonesian.js");
 const PREFECTURES = require("./sets/prefectures.js");
 const JPCITIES = require("./sets/jpcities.js");
@@ -39,6 +40,8 @@ const JPCITIESHARD = require("./sets/jpcitieshard.js");
 const KABUPATENS = require("./sets/kabupatens.js");
 const CNPROVINCES = require("./sets/cnprovinces.js");
 const CNCITIES = require("./sets/cncities.js");
+const CNPLATES = require("./sets/cnplates.js");
+const CNAREACODES = require("./sets/cnareacodes.js");
 const THPROVINCES = require("./sets/thprovinces.js");
 const THPVABBR = require("./sets/thpvabbr.js");
 const BRSTATECODES = require("./sets/brstatecodes.js");
@@ -51,6 +54,7 @@ const KRCITIES = require("./sets/krcities.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
 const CITYGUESS = require("./sets/cityguess.js");
+const { MAX_ROUNDS_CITY } = require("./utils/Helpers");
 
 // Ignore messages starting with (from scores)
 const IGNORES = ["@", "!", "<"];
@@ -178,6 +182,10 @@ CLIENT.on("message", (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!inuktitut")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, INUKTITUT) });
 		}
+		// INUKWORDS
+		else if (msg.content.toLowerCase().startsWith("!inukwords")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, INUKWORDS) });
+		}
 		// INDONESIAN
 		else if (msg.content.toLowerCase().startsWith("!indonesian")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, INDONESIAN) });
@@ -205,6 +213,14 @@ CLIENT.on("message", (msg) => {
 		// CNCITIES
 		else if (msg.content.toLowerCase().startsWith("!cncities")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, CNCITIES) });
+		}
+		// CNPLATES
+		else if (msg.content.toLowerCase().startsWith("!cnplates")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, CNPLATES) });
+		}
+		// CNAREACODES
+		else if (msg.content.toLowerCase().startsWith("!cnareacodes")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, CNAREACODES) });
 		}
 		// THPROVINCES
 		else if (msg.content.toLowerCase().startsWith("!thprovinces")) {

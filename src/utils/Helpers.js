@@ -25,34 +25,36 @@ const HELPERS = {
 			.setDescription(`
 			Write the transliteration of the given letter in Latin.
 			You will have ${HELPERS.SECONDS_BEFORE_REVEAL} seconds to provide the correct answer.
-      		The correct answer gives 3 points, incorrect -1.
+      The correct answer gives 3 points, incorrect -1.
 			\`!cyrillic #\` - # is the number of rounds (1-${HELPERS.MAX_ROUNDS})
-    		\`!cyrbalkan #\` - Balkan Cyrillic
+    	\`!cyrbalkan #\` - Balkan Cyrillic
 			\`!greek #\`
 			\`!georgian #\` - \' after ejectives
 			\`!korean #\`
 			\`!thai #\` - h after aspirated \`!thvowels #\`
-      		\`!hindi #\`
+      \`!hindi #\`
 			\`!gujarati #\`
 			\`!bengali #\` \`!bdnumerals #\`
 			\`!japanese #\` - Hiragana/Katakana
-      		\`!chinese1-5 #\` - grouped by HSK levels
-			\`!inuktitut #\`
+      \`!chinese1-5 #\` - grouped by HSK levels
+			\`!inuktitut #\` \`!inukwords #\` - 1500+ Inuktitut words
 			\`!indonesian #\` - 2k most common Indonesian words
 			\`!prefectures #\` - Japanese prefecture names
 			\`!jpcities #\` - Japanese cities 250k+ pop. \`!jpcitieshard\`
 			\`!kabupatens #\` - Indonesian regencies (get the province)
 			\`!cnprovinces #\` - Chinese provinces
-      		\`!cncities #\` - all Chinese cities
+      \`!cncities #\` - all Chinese cities
 			\`!thprovinces #\` - Thai provinces \`!thpvabbr\`
 			\`!rucities #\` - Russian cities 50k+ pop. \`!rutowns\`
-      		\`!krcities #\` - South and North Korean cities
-      		\`!grplaces #\` - Greek place names (not only Greece)
+      \`!krcities #\` - South and North Korean cities
+      \`!grplaces #\` - Greek place names (not only Greece)
 			\`!uscapitals #\` - US state capitals
 			\`!brstatecodes #\` - Brazil state area codes \`!brcitycodes\`
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
-      		\`!cityguess #\` - \`!cghelp\` for info and details \`!map\`
-      		\`!citycountry #\` - \`!cchelp\` for info and details
+			\`!cnareacodes #\` - Chinese provincial area codes
+			\`!cnplates #\` - Chinese provincial license plates
+      \`!cityguess #\` - \`!cghelp\` for info and details \`!map\`
+      \`!citycountry #\` - \`!cchelp\` for info and details
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.
