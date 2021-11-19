@@ -44,7 +44,7 @@ const CNPLATES = require("./sets/cnplates.js");
 const CNAREACODES = require("./sets/cnareacodes.js");
 const THPROVINCES = require("./sets/thprovinces.js");
 const THPVABBR = require("./sets/thpvabbr.js");
-const BRSTATECODES = require("./sets/brstatecodes.js");
+const BRAREACODES = require("./sets/brareacodes.js");
 const BRCITYCODES = require("./sets/brcitycodes.js");
 const JPAREACODES = require("./sets/jpareacodes.js");
 const JPCODESMAP = require("./sets/jpcodesmap.js");
@@ -230,9 +230,9 @@ CLIENT.on("message", (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!thpvabbr")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, THPVABBR) });
 		}
-		// BRSTATECODES
-		else if (msg.content.toLowerCase().startsWith("!brstatecodes")) {
-			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, BRSTATECODES) });
+		// BRAREACODES
+		else if (msg.content.toLowerCase().startsWith("!brareacodes")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, BRAREACODES) });
 		}
 		// BRCITYCODES
 		else if (msg.content.toLowerCase().startsWith("!brcitycodes")) {

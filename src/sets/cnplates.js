@@ -35,8 +35,6 @@ const CNPLATES = {
 		{ "letter": "https://i.imgur.com/fHI5FAW.jpg", "answers": ["Xinjiang"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinacrosshongkong.jpg", "answers": ["Hong Kong"] },
 		{ "letter": "http://www.plateshack.com/y2k/PRChina/chinacrossmacao.jpg", "answers": ["Macau", "Macao"] },
-		{ "letter": "http://www.plateshack.com/y2k/PRChina/macao2008pass.jpg", "answers": ["Macau", "Macao"] },
-		{ "letter": "https://i.imgur.com/yMWAufb.jpg", "answers": ["Hong Kong"] },
   ]
 };
 

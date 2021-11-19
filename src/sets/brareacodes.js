@@ -1,4 +1,4 @@
-const BRSTATECODES = {
+const BRAREACODES = {
 	"footer": "Write the Brazilian state containing these area codes.",
 	"sets": [
     { "letter": "11-19", "answers": ["Sao Paulo"] },
@@ -31,4 +31,4 @@ const BRSTATECODES = {
   ]
 };
 
-module.exports = BRSTATECODES;
+module.exports = BRAREACODES;

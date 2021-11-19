@@ -49,7 +49,7 @@ const HELPERS = {
       \`!krcities #\` - South and North Korean cities
       \`!grplaces #\` - Greek place names (not only Greece)
 			\`!uscapitals #\` - US state capitals
-			\`!brstatecodes #\` - Brazil state area codes \`!brcitycodes\`
+			\`!brareacodes #\` - Brazil state area codes \`!brcitycodes\`
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes
 			\`!cnplates #\` - Chinese provincial license plates

@@ -36,9 +36,7 @@ const JPCODESMAP = {
     { "answers": ["057", "57"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734566195658833/Completed_057.jpg" },
     { "answers": ["058", "58"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734799734521886/Completed_058.jpg" },
     { "answers": ["059", "59"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734879375958096/Completed_059.jpg" },
-	
-    { "answers": ["06", "6"], "letter": "https://sciaiptoid.alokk.repl.co/japan/Completed_06.jpg" },
-
+    { "answers": ["06", "6"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734872715395102/Completed_06.jpg" },
     { "answers": ["076", "76"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734570490634340/Completed_076.jpg" },
     { "answers": ["077", "77"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734784031039538/Completed_077.jpg" },
     { "answers": ["074", "74"], "letter": "https://cdn.discordapp.com/attachments/900715602409320479/900734782516916234/Completed_074.jpg" },

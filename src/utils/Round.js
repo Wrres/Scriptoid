@@ -23,7 +23,12 @@ class Round {
 	sendRandomCharacter(msg){
 		// This will trigger to reveal if nobody got it correct after the given time
 		this.inactivityTimeout = setTimeout(() => {
-			msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			if(this.currentSet.answers.length < 2){
+				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			}
+			else{
+				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+			}
 			this.resetRound(msg);
 		}, HELPERS.SECONDS_BEFORE_REVEAL * 1000);
 
@@ -103,7 +108,12 @@ class Round {
 	answer(msg){
 		if(this.currentSet.answers){
 			clearTimeout(this.inactivityTimeout);
-			msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			if(this.currentSet.answers.length < 2){
+				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			}
+			else{
+				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+			}
 			this.resetRound(msg);
 		}
 	}
@@ -202,7 +212,12 @@ class Round {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.letter && this.currentSet.answers){
-			msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			if(this.currentSet.answers.length < 2){
+				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+			}
+			else{
+				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+			}
 		}
 		this.doSummary(msg);
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
