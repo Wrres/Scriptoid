@@ -266,13 +266,13 @@ CLIENT.on("message", (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!uscapitals")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, USCAPITALS) });
 		}
-		// CITYCOUNTRY
-		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
-			CHANNELS.push({ "id": msg.channel.id, "round": new RoundCity(msg, CITYGUESS) });
-		}
 		// CITYGUESS
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
+		}
+		// CITYCOUNTRY
+		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundCity(msg, CITYGUESS) });
 		}
 	}
 

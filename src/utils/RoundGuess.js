@@ -48,7 +48,7 @@ class RoundGuess {
 		// Set a current round
 		this.currentSet = this.getSet();
 
-		let footer = this.language.footer;
+		let footer = this.language.footer1;
 		if (this.rounds == 1) {
 			footer += `\n${this.rounds} round left.`;
 		}
@@ -65,7 +65,7 @@ class RoundGuess {
 				const messageEmbed = new MessageEmbed()
 					.setColor("#0099ff")
 					.setTitle(`${this.currentSet.city}`)
-					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
+					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
 				msg.reply(messageEmbed);
 			})
 			.catch((error) => {
@@ -286,7 +286,7 @@ class RoundGuess {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setAuthor("Google Maps 🔗", "https://i.imgur.com/3p5i1wt.png", `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`)
-			.addField(this.currentSet.country[0], this.currentSet.city, true);
+			.addField(this.currentSet.country[1], this.currentSet.city, true);
 		if (roundSummary) {
 			messageEmbed.setTitle("Round scores");
 			messageEmbed.setDescription(roundSummary);

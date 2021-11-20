@@ -47,11 +47,21 @@ class RoundCity {
 			footer += `\n${this.rounds} rounds left.`;
 		}
 
-		const messageEmbed = new MessageEmbed()
-			.setColor("#0099ff")
-			.setTitle(`${this.currentSet.city}`)
-			.setFooter(`[${this.currentSet.pop}]\n${footer}`);
-		msg.reply(messageEmbed);
+		let elevation = "";
+		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
+			.then((data) => {
+				if (data) {
+					elevation = ` · Alt: ${data} m`;
+				}
+				const messageEmbed = new MessageEmbed()
+					.setColor("#0099ff")
+					.setTitle(`${this.currentSet.city}`)
+					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
+				msg.reply(messageEmbed);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
 	/**
