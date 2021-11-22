@@ -1,4 +1,6 @@
 const { MessageEmbed } = require("discord.js");
+const CHEERIO = require("cheerio");
+const FETCH = require("node-fetch");
 
 const HELPERS = require("./Helpers");
 
@@ -29,6 +31,7 @@ class RoundGuess {
 	 * Sends a random character as an embed in chat
 	 */
 	sendRandomCharacter(msg) {
+		this.channel.sendTyping();
 		this.inactivityTimeout = setTimeout(() => {
 			setTimeout(() => {
 				this.doRoundSummary(msg);
@@ -37,7 +40,7 @@ class RoundGuess {
 		}, HELPERS.SECONDS_BEFORE_REVEAL_GUESS * 1000);
 		// This will send a message 15 seconds prior to the round ending
 		this.roundLeftTimeout = setTimeout(() => {
-			msg.channel.send(`⏰ **15 seconds remaining.**`);
+			this.channel.send(`⏰ **15 seconds remaining.**`);
 		}, (HELPERS.SECONDS_BEFORE_REVEAL_GUESS * 1000) - 15000);
 
 		// Decrement rounds left
@@ -57,20 +60,140 @@ class RoundGuess {
 		}
 
 		let elevation = "";
+
 		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
 			.then((data) => {
 				if (data) {
 					elevation = ` · Alt: ${data} m`;
 				}
-				const messageEmbed = new MessageEmbed()
-					.setColor("#0099ff")
-					.setTitle(`${this.currentSet.city}`)
-					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
-				msg.reply(messageEmbed);
+
+				// this.currentSet.city = "Dandenong";
+				// this.currentSet.country[0] = "AU";
+				// this.currentSet.country[1] = "Australia";
+				// this.currentSet.sub = "Victoria";
+				
+				const messageEmbed = new MessageEmbed();
+				messageEmbed.setColor("#0099ff");
+				messageEmbed.setTitle(`${this.currentSet.city}`);
+				messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
+
+				// console.log("City", this.currentSet.city);
+
+				let cityClean = HELPERS.cleanCityName(this.currentSet);
+
+				let cityURI = encodeURI(cityClean);
+				let pageCity = HELPERS.BASE_URL + cityURI;
+				
+				// console.log("PageCity", pageCity);
+
+				// setTimeout(() => {
+				// 	this.channel.send(pageCity);
+				// }, 1000);
+
+				let pageCountry = pageCity + ',_' + encodeURI(this.currentSet.country[1]);
+				// console.log("PageCountry", pageCountry);
+				// setTimeout(() => {
+				// 	this.channel.send(pageCountry);
+				// }, 2000);
+				this.getCityImage(pageCountry, true)
+					.then((response) => {
+						if(response == "SEND"){
+							this.channel.send({"embeds": [messageEmbed]});
+						}
+						else if(response){
+							messageEmbed.setImage(response);
+							this.channel.send({"embeds": [messageEmbed]});
+						}
+						else{
+							this.getCityImage(pageCity, true)
+								.then((response) => {
+									if(response == "SEND"){
+										this.channel.send({"embeds": [messageEmbed]});
+									}
+									else if(response){
+										messageEmbed.setImage(response);
+										this.channel.send({"embeds": [messageEmbed]});
+									}
+									else if(this.currentSet.country[0] == "US" || this.currentSet.country[0] == "UK" || this.currentSet.country[0] == "AU"){
+										let pageSub = pageCity + ',_' + encodeURI(this.currentSet.sub);
+										// console.log("PageSub", pageSub);
+										// setTimeout(() => {
+										// 	this.channel.send(pageSub);
+										// }, 2000);
+										this.getCityImage(pageSub, false)
+											.then((response) => {
+												if(response == "SEND"){
+													this.channel.send({"embeds": [messageEmbed]});
+												}
+												else if(response){
+													messageEmbed.setImage(response);
+													this.channel.send({"embeds": [messageEmbed]});
+												}
+												else{
+													this.channel.send({"embeds": [messageEmbed]});
+												}
+											})
+									}
+									else{
+										this.channel.send({"embeds": [messageEmbed]});
+									}
+								})
+						}
+					});
 			})
 			.catch((error) => {
 				console.log(error);
 			});
+	}
+
+	getCityImage(page, continueOnError){
+		return new Promise((resolve, reject) => {
+			FETCH(page)
+			.then((response) => {
+				if(response.status === 200){
+					return response.text();
+				}
+				else{
+					return null;
+				}
+			})
+			.then((data) => {
+				if(data){
+					const $ = CHEERIO.load(data);
+					let image = $("meta[property='og:image']").attr("content") || null;
+
+					// console.log("Image", image);
+
+					if(image){
+						if( image.toLowerCase().endsWith(".jpg")
+							|| image.toLowerCase().endsWith(".gif")
+							|| image.toLowerCase().includes("collage")
+							|| image.toLowerCase().includes("montage")
+							|| image.toLowerCase().includes("collection")
+						){
+							resolve(image);
+						}
+						else{
+							resolve(null);
+						}
+					}
+					else{
+						resolve(null);
+					}
+				}
+				else{
+					if(continueOnError){
+						resolve(null);
+					}
+					else{
+						resolve("SEND");
+					}
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		});
 	}
 
 	/**
@@ -122,13 +245,13 @@ class RoundGuess {
 					// User exists and his lastRound is lower than currentRound
 					// We can register his guess once
 					if (user.lastRound < this.currentRound) {
-						msg.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
+						this.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
 						this.addCorrect(msg, distance);
 					}
 				}
 				// User doesn't exist
 				else {
-					msg.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
+					this.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
 					this.addCorrect(msg, distance);
 				}
 			}
@@ -189,12 +312,14 @@ class RoundGuess {
 		clearTimeout(this.roundLeftTimeout);
 		if (this.rounds > 0) {
 			this.currentSet = {};
+			this.channel.sendTyping();
 			this.nextRoundTimeout = setTimeout(() => {
 				this.sendRandomCharacter(msg);
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 		else {
 			this.currentSet = {};
+			this.channel.sendTyping();
 			this.nextRoundTimeout = setTimeout(() => {
 				this.doSummary(msg);
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
@@ -248,7 +373,7 @@ class RoundGuess {
 				.setColor("#0099ff")
 				.setTitle("Final scores 🏁")
 				.setDescription(summary);
-			msg.channel.send(messageEmbed);
+				this.channel.send({"embeds": [messageEmbed]});
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
@@ -291,7 +416,7 @@ class RoundGuess {
 			messageEmbed.setTitle("Round scores");
 			messageEmbed.setDescription(roundSummary);
 		}
-		msg.channel.send(messageEmbed);
+		this.channel.send({"embeds": [messageEmbed]});
 	}
 
 	end(msg) {

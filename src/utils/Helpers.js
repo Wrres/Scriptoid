@@ -11,12 +11,13 @@ const HELPERS = {
 	MAX_ROUNDS_CITY: 30,
 	EMITTER: new EventEmitter(),
 	VERSION: "0.0.1-Z",
+	BASE_URL: "https://en.wikipedia.org/wiki/",
 	sendVersionMessage: (msg) => {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setTitle("Version")
 			.setDescription(`V. ${HELPERS.VERSION}`);
-		msg.reply(messageEmbed);
+		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendHelpMessage: (msg) => {
 		const messageEmbed = new MessageEmbed()
@@ -25,41 +26,41 @@ const HELPERS = {
 			.setDescription(`
 			Write the transliteration of the given letter in Latin.
 			You will have ${HELPERS.SECONDS_BEFORE_REVEAL} seconds to provide the correct answer.
-      The correct answer gives 3 points, incorrect -1.
+			The correct answer gives 3 points, incorrect -1.
 			\`!cyrillic #\` - # is the number of rounds (1-${HELPERS.MAX_ROUNDS})
-    	\`!cyrbalkan #\` - Balkan Cyrillic
+			\`!cyrbalkan #\` - Balkan Cyrillic
 			\`!greek #\`
 			\`!georgian #\` - \' after ejectives
 			\`!korean #\`
 			\`!thai #\` - h after aspirated \`!thvowels #\`
-      \`!hindi #\`
+			\`!hindi #\`
 			\`!gujarati #\`
 			\`!bengali #\` \`!bdnumerals #\`
 			\`!japanese #\` - Hiragana/Katakana
-      \`!chinese1-5 #\` - grouped by HSK levels
+			\`!chinese1-5 #\` - grouped by HSK levels
 			\`!inuktitut #\` \`!inukwords #\` - 1500+ Inuktitut words
 			\`!indonesian #\` - 2k most common Indonesian words
 			\`!prefectures #\` - Japanese prefecture names
 			\`!jpcities #\` - Japanese cities 250k+ pop. \`!jpcitieshard\`
 			\`!kabupatens #\` - Indonesian regencies (get the province)
 			\`!cnprovinces #\` - Chinese provinces
-      \`!cncities #\` - all Chinese cities
+			\`!cncities #\` - all Chinese cities
 			\`!thprovinces #\` - Thai provinces \`!thpvabbr\`
 			\`!rucities #\` - Russian cities 50k+ pop. \`!rutowns\`
-      \`!krcities #\` - South and North Korean cities
-      \`!grplaces #\` - Greek place names (not only Greece)
+			\`!krcities #\` - South and North Korean cities
+			\`!grplaces #\` - Greek place names (not only Greece)
 			\`!uscapitals #\` - US state capitals
 			\`!brareacodes #\` - Brazil state area codes \`!brcitycodes\`
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes
 			\`!cnplates #\` - Chinese provincial license plates
-      \`!cityguess #\` - \`!cghelp\` for info and details \`!map\`
-      \`!citycountry #\` - \`!cchelp\` for info and details
+			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\`
+			\`!citycountry #\` - \`!cchelp\` for info and details
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.
 			The bot won't react to messages that start with \`!\` or \`@\`.`);
-		msg.reply(messageEmbed);
+		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendCityMessage: (msg) => {
 		const messageEmbed = new MessageEmbed()
@@ -68,10 +69,10 @@ const HELPERS = {
 			.setDescription(`
 			Write the country the given city is in.
 			You will have ${HELPERS.SECONDS_BEFORE_REVEAL_CITY} seconds to provide the correct answer.
-      		The correct answer gives 5 points, incorrect -1.
-      		The maximum number of rounds is ${HELPERS.MAX_ROUNDS_CITY}.
-      		All cities 10k+ population in the world (28k cities).`);
-		msg.reply(messageEmbed);
+			The correct answer gives 5 points, incorrect -1.
+			The maximum number of rounds is ${HELPERS.MAX_ROUNDS_CITY}.
+			All cities 10k+ population in the world (28k cities).`);
+		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendGuessMessage: (msg) => {
 		const messageEmbed = new MessageEmbed()
@@ -84,7 +85,7 @@ const HELPERS = {
 			The maximum number of rounds is ${HELPERS.MAX_ROUNDS}.
 			All cities 10k+ population in the world (28k cities).
 			*!answer doesn't work in this command.`);
-		msg.reply(messageEmbed);
+		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendMapMessage: (msg) => {
 		msg.channel.send("Guessing map: <https://bit.ly/GuessingMap> (click on the map and paste here)");
@@ -105,15 +106,15 @@ const HELPERS = {
 		return deg * (Math.PI / 180);
 	},
 	generateRandoms: (amount, total) => {
-		if(amount > total){
+		if (amount > total) {
 			console.log("Amount can't be higher than total possible options");
 			return null;
 		}
 		let outcome = [];
 
-		while(outcome.length < amount){
+		while (outcome.length < amount) {
 			let rand = Math.floor(Math.random() * total);
-			if(!outcome.includes(rand)){
+			if (!outcome.includes(rand)) {
 				outcome.push(rand);
 			}
 		}
@@ -122,11 +123,11 @@ const HELPERS = {
 	getNumberOfRounds: (msg) => {
 		let msgdata = msg.content.split(" ");
 		let rounds = parseInt(msgdata[1]);
-		if(!isNaN(rounds)){			
-			if(rounds < 0){
+		if (!isNaN(rounds)) {
+			if (rounds < 0) {
 				rounds = 1;
 			}
-			if(rounds > HELPERS.MAX_ROUNDS){
+			if (rounds > HELPERS.MAX_ROUNDS) {
 				rounds = HELPERS.MAX_ROUNDS;
 			}
 			return rounds;
@@ -138,10 +139,10 @@ const HELPERS = {
 			FETCH(`https://api.opentopodata.org/v1/aster30m?locations=${lat},${lng}`)
 				.then((response) => response.json())
 				.then((data) => {
-					if(data.status === "OK"){
+					if (data.status === "OK") {
 						resolve(HELPERS.numberWithCommas(data.results[0].elevation));
 					}
-					else{
+					else {
 						resolve(null);
 					}
 				})
@@ -152,6 +153,120 @@ const HELPERS = {
 	},
 	numberWithCommas: (x) => {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	},
+	cleanCityName: (set) => {
+		let city = set.city
+			.replaceAll("ā", "a")
+			.replaceAll("Ā", "A")
+			.replaceAll("ē", "e")
+			.replaceAll("Ē", "E")
+			.replaceAll("ū", "u")
+			.replaceAll("Ū", "U")
+			.replaceAll("ī", "i")
+			.replaceAll("Ī", "I")
+			.replaceAll("ḩ", "h")
+			.replaceAll("Ḩ", "H");
+		if (set.country[0] == "RU" || set.country[0] == "UA" || set.country[0] == "BY") {
+			city = city.replaceAll("’", "");
+		}
+		if (set.country[0] == "KP") {
+			city = city.replaceAll("-ŭp", "");
+		}
+		return city;
+	},
+	getCityImage: async (set, channel) => {
+		let pageCity = HELPERS.BASE_URL + encodeURI(HELPERS.cleanCityName(set));
+		setTimeout(() => {
+			channel.send(pageCity);
+		}, 1000);
+		let pageCityBody = await HELPERS.getPage(pageCity);
+		if(pageCityBody){
+			const $ = CHEERIO.load(pageCityBody);
+			let image = $("meta[property='og:image']").attr("content") || null;
+			if(HELPERS.isImageValid(image)){
+				console.log("Returning Image 1");
+				return image;
+			}
+			else{
+				let pageCountry = pageCity + ',_' + encodeURI(set.country[1]);
+				setTimeout(() => {
+					channel.send(pageCountry);
+				}, 2000);
+				let pageCountryBody = await HELPERS.getPage(pageCountry);
+				if(pageCountryBody){
+					const $ = CHEERIO.load(pageCountryBody);
+					let image = $("meta[property='og:image']").attr("content") || null;
+					if(HELPERS.isImageValid(image)){
+						console.log("Returning Image 2");
+						return image;
+					}
+					else{
+						return null;
+					}
+				}
+				else{
+					if(set.country[0] == "US" || set.country[0] == "UK" || set.country[0] == "AU"){
+						let pageState = pageCity + ',_' + encodeURI(set.sub);
+						setTimeout(() => {
+							channel.send(pageState);
+						}, 3000);
+						let pageStateBody = await HELPERS.getPage(pageState);
+						if(pageStateBody){
+							const $ = CHEERIO.load(pageStateBody);
+							let image = $("meta[property='og:image']").attr("content") || null;
+							if(HELPERS.isImageValid(image)){
+								console.log("Returning Image 3");
+								return image;
+							}
+							else{
+								return null;
+							}
+						}
+						else{
+							return null;
+						}
+					}
+					else{
+						return null;
+					}
+				}
+			}
+		}
+		else{
+			return null;
+		}
+	},
+	getPage: (page) => {
+		FETCH(page)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.text();
+				}
+				else {
+					return null;
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	},
+	isImageValid: (image) => {
+		if (image) {
+			if (image.toLowerCase().endsWith(".jpg") ||
+				image.toLowerCase().endsWith(".gif") ||
+				image.toLowerCase().includes("collage") ||
+				image.toLowerCase().includes("montage")|| 
+				image.toLowerCase().includes("collection")
+			) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
 	}
 }
 

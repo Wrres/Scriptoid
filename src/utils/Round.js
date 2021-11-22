@@ -24,10 +24,10 @@ class Round {
 		// This will trigger to reveal if nobody got it correct after the given time
 		this.inactivityTimeout = setTimeout(() => {
 			if(this.currentSet.answers.length < 2){
-				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
 			}
 			else{
-				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
 			}
 			this.resetRound(msg);
 		}, HELPERS.SECONDS_BEFORE_REVEAL * 1000);
@@ -50,7 +50,7 @@ class Round {
 			.setColor("#0099ff")
 			.setTitle(`${this.currentSet.letter}`)
 			.setFooter(footer);
-		msg.reply(messageEmbed);
+		this.channel.send({"embeds": [messageEmbed]});
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Round {
 				if(this.language.footer.includes("Chinese character") || this.language.footer.includes("Inuktitut word")){
 					let set = this.currentSet;
 					setTimeout(() => {
-						msg.channel.send(`Correct! \`${set.letter}\` is ${set.answers.join(", ")}.`);
+						this.channel.send(`Correct! \`${set.letter}\` is ${set.answers.join(", ")}.`);
 					}, 1000);
 				}
 				this.resetRound(msg);
@@ -109,10 +109,10 @@ class Round {
 		if(this.currentSet.answers){
 			clearTimeout(this.inactivityTimeout);
 			if(this.currentSet.answers.length < 2){
-				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
 			}
 			else{
-				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
 			}
 			this.resetRound(msg);
 		}
@@ -203,7 +203,7 @@ class Round {
 				.setColor("#0099ff")
 				.setTitle("Scores")
 				.setDescription(summary);
-			msg.channel.send(messageEmbed);
+			this.channel.send({"embeds": [messageEmbed]});
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
@@ -213,10 +213,10 @@ class Round {
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.letter && this.currentSet.answers){
 			if(this.currentSet.answers.length < 2){
-				msg.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answer for \`${this.currentSet.letter}\` was ${this.currentSet.answers.join(", ")}.`);
 			}
 			else{
-				msg.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
+				this.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
 			}
 		}
 		this.doSummary(msg);

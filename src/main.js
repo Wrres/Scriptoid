@@ -6,7 +6,7 @@ const RL = READLINE.createInterface({
 });
 
 //const runServer = require("./Server");
-const Discord = require("discord.js");
+const { Client, Intents, MessageEmbed, MessageAttachment } = require("discord.js");
 
 const Round = require("./utils/Round");
 const RoundCity = require("./utils/RoundCity");
@@ -61,7 +61,7 @@ const IGNORES = ["@", "!", "<"];
 // Holding to channels where the bot is running and it's data for each
 let CHANNELS = [];
 
-const CLIENT = new Discord.Client();
+const CLIENT = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
 CLIENT.on("ready", () => {
 	console.log(`${formatDate(new Date())} · Logged in as ${CLIENT.user.tag}!`);
@@ -80,7 +80,7 @@ CLIENT.on("invalidated", (invalidated) => {
 	CLIENT.login(process.env.TOKEN);
 });
 
-CLIENT.on("message", (msg) => {
+CLIENT.on("messageCreate", async (msg) => {
 	if (msg.author.bot) return
 
 	// HELP

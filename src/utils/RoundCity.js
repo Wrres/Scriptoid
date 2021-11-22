@@ -29,7 +29,7 @@ class RoundCity {
 	sendRandomCharacter(msg){
 		// This will trigger to reveal if nobody got it correct after the given time
 		this.inactivityTimeout = setTimeout(() => {
-			msg.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
+			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
 			this.resetRound(msg);
 		}, HELPERS.SECONDS_BEFORE_REVEAL_CITY * 1000);
 
@@ -57,7 +57,7 @@ class RoundCity {
 					.setColor("#0099ff")
 					.setTitle(`${this.currentSet.city}`)
 					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
-				msg.reply(messageEmbed);
+				this.channel.send({"embeds": [messageEmbed]});
 			})
 			.catch((error) => {
 				console.log(error);
@@ -109,7 +109,7 @@ class RoundCity {
 	answer(msg){
 		if(this.currentSet.country){
 			clearTimeout(this.inactivityTimeout);
-			msg.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
+			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
 			this.resetRound(msg);
 		}
 	}
@@ -199,7 +199,7 @@ class RoundCity {
 				.setColor("#0099ff")
 				.setTitle("Scores")
 				.setDescription(summary);
-			msg.channel.send(messageEmbed);
+			this.channel.send({"embeds": [messageEmbed]});
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
@@ -208,7 +208,7 @@ class RoundCity {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.city && this.currentSet.country){
-			msg.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
+			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
 		}
 		this.doSummary(msg);
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);

@@ -23,7 +23,7 @@ class RoundImage {
 	sendRandomCharacter(msg) {
 		// This will trigger to reveal if nobody got it correct after the given time
 		this.inactivityTimeout = setTimeout(() => {
-			msg.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
+			this.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
 			this.resetRound(msg);
 		}, HELPERS.SECONDS_BEFORE_REVEAL * 1000);
 
@@ -46,7 +46,7 @@ class RoundImage {
 			.setTitle(this.language.title)
 			.setImage(this.currentSet.letter)
 			.setFooter(footer);
-		msg.reply(messageEmbed);
+		this.channel.send({"embeds": [messageEmbed]});
 	}
 
 	/**
@@ -97,7 +97,7 @@ class RoundImage {
 	answer(msg) {
 		if (this.currentSet.answers) {
 			clearTimeout(this.inactivityTimeout);
-			msg.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
+			this.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
 			this.resetRound(msg);
 		}
 	}
@@ -187,7 +187,7 @@ class RoundImage {
 				.setColor("#0099ff")
 				.setTitle("Scores")
 				.setDescription(summary);
-			msg.channel.send(messageEmbed);
+			this.channel.send({"embeds": [messageEmbed]});
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
@@ -196,7 +196,7 @@ class RoundImage {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.letter && this.currentSet.answers){
-			msg.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
+			this.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
 		}
 		this.doSummary(msg);
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
