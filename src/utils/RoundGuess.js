@@ -114,7 +114,13 @@ class RoundGuess {
 										messageEmbed.setImage(response);
 										this.channel.send({"embeds": [messageEmbed]});
 									}
-									else if(this.currentSet.country[0] == "US" || this.currentSet.country[0] == "UK" || this.currentSet.country[0] == "AU"){
+									else if(this.currentSet.country[0] == "US"
+										|| this.currentSet.country[0] == "UK"
+										|| this.currentSet.country[0] == "AU"
+										|| this.currentSet.country[0] == "CA"
+										|| this.currentSet.country[0] == "MX"
+										|| this.currentSet.country[0] == "BR"
+									){
 										let pageSub = pageCity + ',_' + encodeURI(this.currentSet.sub);
 										// console.log("PageSub", pageSub);
 										// setTimeout(() => {

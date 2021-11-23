@@ -165,7 +165,22 @@ const HELPERS = {
 			.replaceAll("ī", "i")
 			.replaceAll("Ī", "I")
 			.replaceAll("ḩ", "h")
-			.replaceAll("Ḩ", "H");
+			.replaceAll("Ḩ", "H")
+			.replaceAll("â", "a")
+			.replaceAll("Â", "A")
+			.replaceAll("û", "u")
+			.replaceAll("Û", "U")
+			.replaceAll("ï", "i")
+			.replaceAll("Ï", "I")
+			.replaceAll("î", "i")
+			.replaceAll("Î", "I")
+			.replaceAll("‘", "")
+			.replaceAll("ţ", "t")
+			.replaceAll("Ţ", "T")
+			.replaceAll("ş", "s")
+			.replaceAll("Ş", "S")
+			.replaceAll("ŭ", "u")
+			.replaceAll("Ŭ", "U");
 		if (set.country[0] == "RU" || set.country[0] == "UA" || set.country[0] == "BY") {
 			city = city.replaceAll("’", "");
 		}
