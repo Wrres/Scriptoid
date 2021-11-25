@@ -24,6 +24,8 @@ class RoundGuess {
 			this.sets.push(this.language.sets[rand]);
 		});
 		this.language.sets = null;
+		this.roundSummarySent = false;
+		this.finalSummarySent = false;
 		this.sendRandomCharacter(msg);
 	}
 
@@ -64,7 +66,7 @@ class RoundGuess {
 		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
 			.then((data) => {
 				if (data) {
-					elevation = ` · Alt: ${data} m`;
+					elevation = ` · Alt: ${data.meters} m · ${data.feet} ft`;
 				}
 
 				// this.currentSet.city = "Dandenong";
@@ -75,7 +77,7 @@ class RoundGuess {
 				const messageEmbed = new MessageEmbed();
 				messageEmbed.setColor("#0099ff");
 				messageEmbed.setTitle(`${this.currentSet.city}`);
-				messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
+				messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
 
 				// console.log("City", this.currentSet.city);
 
@@ -89,13 +91,13 @@ class RoundGuess {
 				// setTimeout(() => {
 				// 	this.channel.send(pageCity);
 				// }, 1000);
-
-				let pageCountry = pageCity + ',_' + encodeURI(this.currentSet.country[1]);
-				// console.log("PageCountry", pageCountry);
+				
+				let pageSub = pageCity + ',_' + encodeURI(this.currentSet.sub);
+				// console.log("PageSub", pageSub);
 				// setTimeout(() => {
-				// 	this.channel.send(pageCountry);
+				// 	this.channel.send(pageSub);
 				// }, 2000);
-				this.getCityImage(pageCountry, true)
+				this.getCityImage(pageSub, true)
 					.then((response) => {
 						if(response == "SEND"){
 							this.channel.send({"embeds": [messageEmbed]});
@@ -104,46 +106,37 @@ class RoundGuess {
 							messageEmbed.setImage(response);
 							this.channel.send({"embeds": [messageEmbed]});
 						}
-						else{
-							this.getCityImage(pageCity, true)
-								.then((response) => {
-									if(response == "SEND"){
-										this.channel.send({"embeds": [messageEmbed]});
-									}
-									else if(response){
-										messageEmbed.setImage(response);
-										this.channel.send({"embeds": [messageEmbed]});
-									}
-									else if(this.currentSet.country[0] == "US"
-										|| this.currentSet.country[0] == "UK"
-										|| this.currentSet.country[0] == "AU"
-										|| this.currentSet.country[0] == "CA"
-										|| this.currentSet.country[0] == "MX"
-										|| this.currentSet.country[0] == "BR"
-									){
-										let pageSub = pageCity + ',_' + encodeURI(this.currentSet.sub);
-										// console.log("PageSub", pageSub);
-										// setTimeout(() => {
-										// 	this.channel.send(pageSub);
-										// }, 2000);
-										this.getCityImage(pageSub, false)
-											.then((response) => {
-												if(response == "SEND"){
-													this.channel.send({"embeds": [messageEmbed]});
-												}
-												else if(response){
-													messageEmbed.setImage(response);
-													this.channel.send({"embeds": [messageEmbed]});
-												}
-												else{
-													this.channel.send({"embeds": [messageEmbed]});
-												}
-											})
-									}
-									else{
-										this.channel.send({"embeds": [messageEmbed]});
-									}
-								})
+						else {
+						let pageCountry = pageCity + ',_' + encodeURI(this.currentSet.country[1]);
+						// console.log("PageCountry", pageCountry);
+						// setTimeout(() => {
+						// 	this.channel.send(pageCountry);
+						// }, 2000);
+						this.getCityImage(pageCountry, true)
+							.then((response) => {
+								if(response == "SEND"){
+									this.channel.send({"embeds": [messageEmbed]});
+								}
+								else if(response){
+									messageEmbed.setImage(response);
+									this.channel.send({"embeds": [messageEmbed]});
+								}
+								else{
+									this.getCityImage(pageCity, false)
+										.then((response) => {
+											if(response == "SEND"){
+												this.channel.send({"embeds": [messageEmbed]});
+											}
+											else if(response){
+												messageEmbed.setImage(response);
+												this.channel.send({"embeds": [messageEmbed]});
+											}
+											else{
+												this.channel.send({"embeds": [messageEmbed]});
+											}
+										})
+								}
+							})
 						}
 					});
 			})
@@ -180,11 +173,35 @@ class RoundGuess {
 							resolve(image);
 						}
 						else{
-							resolve(null);
+							HELPERS.getImageFromPage(page)
+							.then((response) => {
+								if(response){
+									resolve(response);
+								}
+								else{
+									resolve(null);
+								}
+							})
+							.catch((error) => {
+								console.log(error);
+								resolve(null);
+							});
 						}
 					}
 					else{
-						resolve(null);
+						HELPERS.getImageFromPage(page)
+							.then((response) => {
+								if(response){
+									resolve(response);
+								}
+								else{
+									resolve(null);
+								}
+							})
+							.catch((error) => {
+								console.log(error);
+								resolve(null);
+							});
 					}
 				}
 				else{
@@ -251,13 +268,13 @@ class RoundGuess {
 					// User exists and his lastRound is lower than currentRound
 					// We can register his guess once
 					if (user.lastRound < this.currentRound) {
-						this.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
+						this.channel.send(`*\`${msg.author.username}\` has guessed.*`);
 						this.addCorrect(msg, distance);
 					}
 				}
 				// User doesn't exist
 				else {
-					this.channel.send(`*\`${msg.author.username.replace("*", "\*").replace("_", "\_").replace("`", "\`")}\` has guessed.*`);
+					this.channel.send(`*\`${msg.author.username}\` has guessed.*`);
 					this.addCorrect(msg, distance);
 				}
 			}
@@ -279,7 +296,14 @@ class RoundGuess {
 	}
 
 	answer(msg) {
-		// NOTHING
+		if(this.currentSet.country){
+			clearTimeout(this.inactivityTimeout);
+			clearTimeout(this.roundLeftTimeout);
+			if(!this.roundSummarySent){
+				this.doRoundSummary(msg);
+			}
+			this.resetRound(msg);
+		}
 	}
 
 	/**
@@ -317,15 +341,17 @@ class RoundGuess {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.roundLeftTimeout);
 		if (this.rounds > 0) {
-			this.currentSet = {};
-			this.channel.sendTyping();
+			// this.currentSet = {};
 			this.nextRoundTimeout = setTimeout(() => {
+				this.roundSummarySent = false;
 				this.sendRandomCharacter(msg);
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 		else {
-			this.currentSet = {};
-			this.channel.sendTyping();
+			// this.currentSet = {};
+			if(this.users.length){
+				this.channel.sendTyping();
+			}
 			this.nextRoundTimeout = setTimeout(() => {
 				this.doSummary(msg);
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
@@ -336,6 +362,7 @@ class RoundGuess {
 	 * Do summary
 	 */
 	doSummary(msg) {
+		this.finalSummarySent = true;
 		let summary = "";
 
 		this.users.sort((userA, userB) => {
@@ -385,6 +412,7 @@ class RoundGuess {
 	}
 
 	doRoundSummary(msg) {
+		this.roundSummarySent = true;
 		let roundSummary = "";
 
 		this.users.sort((userA, userB) => {
@@ -417,7 +445,7 @@ class RoundGuess {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setAuthor("Google Maps 🔗", "https://i.imgur.com/3p5i1wt.png", `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`)
-			.addField(this.currentSet.country[1], this.currentSet.city, true);
+			.addField(':flag_' + this.currentSet.country[0].toLowerCase() + ': ' + this.currentSet.country[1] + ', ' + this.currentSet.sub, this.currentSet.city, true);
 		if (roundSummary) {
 			messageEmbed.setTitle("Round scores");
 			messageEmbed.setDescription(roundSummary);
@@ -430,10 +458,14 @@ class RoundGuess {
 		clearTimeout(this.nextRoundTimeout);
 		clearTimeout(this.roundLeftTimeout);
 
-		this.doRoundSummary(msg);
+		if(!this.roundSummarySent){
+			this.doRoundSummary(msg);
+		}
 
 		setTimeout(() => {
-			this.doSummary(msg);
+			if(!this.finalSummarySent){
+				this.doSummary(msg);
+			}
 			HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 		}, 1000);
 	}

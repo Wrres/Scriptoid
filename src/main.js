@@ -1,10 +1,4 @@
 require("dotenv").config();
-const READLINE = require("readline");
-const RL = READLINE.createInterface({
-	input: process.stdin,
-	output: process.stdout
-});
-
 //const runServer = require("./Server");
 const { Client, Intents, MessageEmbed, MessageAttachment } = require("discord.js");
 
@@ -54,6 +48,7 @@ const KRCITIES = require("./sets/krcities.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
 const CITYGUESS = require("./sets/cityguess.js");
+const CGTEST = require("./sets/cgtest.js");
 const { MAX_ROUNDS_CITY } = require("./utils/Helpers");
 
 // Ignore messages starting with (from scores)
@@ -64,8 +59,8 @@ let CHANNELS = [];
 const CLIENT = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
 CLIENT.on("ready", () => {
-	console.log(`${formatDate(new Date())} · Logged in as ${CLIENT.user.tag}!`);
-	CLIENT.user.setActivity('he!p for help', { type: 'PLAYING' });
+	console.log(`${HELPERS.formatDate(new Date())} · Logged in as ${CLIENT.user.tag}!`);
+	CLIENT.user.setActivity("he!p for help", { type: "PLAYING" });
 });
 
 CLIENT.on("error", (error) => {
@@ -270,6 +265,10 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
 		}
+		// CITYGUESS
+		else if (msg.content.toLowerCase().startsWith("!cgt")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CGTEST) });
+		}
 		// CITYCOUNTRY
 		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundCity(msg, CITYGUESS) });
@@ -320,11 +319,6 @@ HELPERS.EMITTER.on("delete-channel", (id) => {
 });
 
 /**
- * PROBABLY EVERYTHING BELOW THIS LINE COULD BE MOVED TO ROUND OR HELPERS
- */
-
-
-/**
  * Determines if a round exists for a given channel id
  */
 function channelContainsActiveGame(id) {
@@ -361,38 +355,3 @@ runServer().then(() => {
 });
 */
 CLIENT.login(process.env.TOKEN);
-
-/**
- * Listen for commands on console
- */
-function consoleListener() {
-	RL.question("§ > ", (command) => {
-		switch (command) {
-			case "help":
-				console.log("Available commands: help, version");
-				break;
-			case "version":
-				console.log("Version 0.0.1");
-				break;
-			case "channels":
-				console.log(CHANNELS);
-				break;
-			default:
-				console.log("Command not found");
-				break;
-		}
-		consoleListener();
-	});
-}
-
-function formatDate(dt) {
-	return `${
-		(dt.getMonth() + 1).toString().padStart(2, '0')}/${
-		dt.getDate().toString().padStart(2, '0')}/${
-		dt.getFullYear().toString().padStart(4, '0')} ${
-		dt.getHours().toString().padStart(2, '0')}:${
-		dt.getMinutes().toString().padStart(2, '0')}:${
-		dt.getSeconds().toString().padStart(2, '0')}`;
-}
-
-setTimeout(consoleListener, 5000);

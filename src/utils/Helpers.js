@@ -1,6 +1,7 @@
 const EventEmitter = require("events");
 const { MessageEmbed } = require("discord.js");
 const FETCH = require("node-fetch");
+const CHEERIO = require("cheerio");
 
 const HELPERS = {
 	SECONDS_AFTER_ANSWER: 3,
@@ -83,8 +84,7 @@ const HELPERS = {
 			You will have 1 minute to guess.
 			The score is the distance between your guess and the city.
 			The maximum number of rounds is ${HELPERS.MAX_ROUNDS}.
-			All cities 10k+ population in the world (28k cities).
-			*!answer doesn't work in this command.`);
+			All cities 10k+ population in the world (28k cities).`);
 		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendMapMessage: (msg) => {
@@ -140,7 +140,9 @@ const HELPERS = {
 				.then((response) => response.json())
 				.then((data) => {
 					if (data.status === "OK") {
-						resolve(HELPERS.numberWithCommas(data.results[0].elevation));
+						let meters = HELPERS.numberWithCommas(data.results[0].elevation);
+						let feet = HELPERS.numberWithCommas(Math.floor(parseInt(data.results[0].elevation) *  3.281));
+						resolve({ "meters": meters, "feet": feet });
 					}
 					else {
 						resolve(null);
@@ -177,10 +179,20 @@ const HELPERS = {
 			.replaceAll("‘", "")
 			.replaceAll("ţ", "t")
 			.replaceAll("Ţ", "T")
-			.replaceAll("ş", "s")
-			.replaceAll("Ş", "S")
 			.replaceAll("ŭ", "u")
-			.replaceAll("Ŭ", "U");
+			.replaceAll("Ŭ", "U")
+			.replaceAll("ə", "a")
+			.replaceAll("Ə", "A")
+			.replaceAll("ǝ", "a")
+			.replaceAll("Ǝ", "A")
+			.replaceAll("ʼ", "'")
+			.replaceAll("`", "")
+			.replaceAll("‘", "")
+			.replaceAll("’", "")
+			.replaceAll("ḑ", "d")
+			.replaceAll("Ḑ", "D")
+			.replaceAll("–", "-")
+			.replaceAll("-ŭp", "");
 		if (set.country[0] == "RU" || set.country[0] == "UA" || set.country[0] == "BY") {
 			city = city.replaceAll("’", "");
 		}
@@ -189,67 +201,41 @@ const HELPERS = {
 		}
 		return city;
 	},
-	getCityImage: async (set, channel) => {
-		let pageCity = HELPERS.BASE_URL + encodeURI(HELPERS.cleanCityName(set));
-		setTimeout(() => {
-			channel.send(pageCity);
-		}, 1000);
-		let pageCityBody = await HELPERS.getPage(pageCity);
-		if(pageCityBody){
-			const $ = CHEERIO.load(pageCityBody);
-			let image = $("meta[property='og:image']").attr("content") || null;
-			if(HELPERS.isImageValid(image)){
-				console.log("Returning Image 1");
-				return image;
-			}
-			else{
-				let pageCountry = pageCity + ',_' + encodeURI(set.country[1]);
-				setTimeout(() => {
-					channel.send(pageCountry);
-				}, 2000);
-				let pageCountryBody = await HELPERS.getPage(pageCountry);
-				if(pageCountryBody){
-					const $ = CHEERIO.load(pageCountryBody);
-					let image = $("meta[property='og:image']").attr("content") || null;
-					if(HELPERS.isImageValid(image)){
-						console.log("Returning Image 2");
-						return image;
-					}
-					else{
-						return null;
-					}
+	getImageFromPage: (url) => {
+		return new Promise((resolve, reject) => {
+			FETCH(url)
+			.then((response) => {
+				if(response.status === 200){
+					return response.text();
 				}
 				else{
-					if(set.country[0] == "US" || set.country[0] == "UK" || set.country[0] == "AU"){
-						let pageState = pageCity + ',_' + encodeURI(set.sub);
-						setTimeout(() => {
-							channel.send(pageState);
-						}, 3000);
-						let pageStateBody = await HELPERS.getPage(pageState);
-						if(pageStateBody){
-							const $ = CHEERIO.load(pageStateBody);
-							let image = $("meta[property='og:image']").attr("content") || null;
-							if(HELPERS.isImageValid(image)){
-								console.log("Returning Image 3");
-								return image;
-							}
-							else{
-								return null;
-							}
-						}
-						else{
-							return null;
-						}
-					}
-					else{
-						return null;
-					}
+					return null;
 				}
-			}
-		}
-		else{
-			return null;
-		}
+			})
+			.then((body) => {
+				if(body){
+					const $ = CHEERIO.load(body);
+					$("a[class=image]")
+						.each((index, element) => {
+							let imageLink = $(element).attr("href");
+							if(imageLink.toLowerCase().endsWith(".jpg")){
+								if(imageLink.includes("/wiki/File:")){
+									resolve(imageLink.replace("/wiki/File:", "https://commons.wikimedia.org/wiki/Special:FilePath/"));
+								}
+							}
+						});
+					resolve(null);
+				}
+				else{
+					console.log("Page does not respond with 200");
+					resolve(null);
+				}
+			})
+			.catch((error) => {
+				console.log("Error", error);
+				resolve(null);
+			});
+		});
 	},
 	getPage: (page) => {
 		FETCH(page)
@@ -282,6 +268,15 @@ const HELPERS = {
 		else {
 			return false;
 		}
+	},
+	formatDate: (date) => {
+		return `${
+			(date.getMonth() + 1).toString().padStart(2, "0")}/${
+			date.getDate().toString().padStart(2, "0")}/${
+			date.getFullYear().toString().padStart(4, "0")} ${
+			date.getHours().toString().padStart(2, "0")}:${
+			date.getMinutes().toString().padStart(2, "0")}:${
+			date.getSeconds().toString().padStart(2, "0")}`;
 	}
 }
 

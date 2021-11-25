@@ -51,12 +51,12 @@ class RoundCity {
 		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
 			.then((data) => {
 				if (data) {
-					elevation = ` · Alt: ${data} m`;
+					elevation = ` · Alt: ${data.meters} m · ${data.feet} ft`;
 				}
 				const messageEmbed = new MessageEmbed()
 					.setColor("#0099ff")
 					.setTitle(`${this.currentSet.city}`)
-					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.population)}${elevation}\n${footer}`);
+					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
 				this.channel.send({"embeds": [messageEmbed]});
 			})
 			.catch((error) => {
