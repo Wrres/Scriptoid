@@ -1,5 +1,8 @@
 # Scriptoid
 
+Script learning as a game!
+he!p for commands
+
 ## Git Steps
 
 `git status` Will show the "Differences" (Things that changed from last commit)
