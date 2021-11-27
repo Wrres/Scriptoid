@@ -7,7 +7,7 @@ const HELPERS = {
 	SECONDS_AFTER_ANSWER: 3,
 	SECONDS_BEFORE_REVEAL: 30,
 	SECONDS_BEFORE_REVEAL_CITY: 45,
-	SECONDS_BEFORE_REVEAL_GUESS: 60,
+	SECONDS_BEFORE_REVEAL_GUESS: 75,
 	MAX_ROUNDS: 20,
 	MAX_ROUNDS_CITY: 30,
 	EMITTER: new EventEmitter(),
@@ -55,7 +55,7 @@ const HELPERS = {
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes
 			\`!cnplates #\` - Chinese provincial license plates
-			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\`
+			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\` \`!pic\`
 			\`!citycountry #\` - \`!cchelp\` for info and details
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
@@ -81,10 +81,13 @@ const HELPERS = {
 			.setTitle("CityGuess Help")
 			.setDescription(`
 			Guess where the given city is by using the \`!map\`.
-			You will have 1 minute to guess.
+			You will have 1 min 15 sec to guess.
 			The score is the distance between your guess and the city.
 			The maximum number of rounds is ${HELPERS.MAX_ROUNDS}.
-			All cities 10k+ population in the world (28k cities).`);
+			All cities 10k+ population in the world (28k cities).
+			*Others can't see your guess message, even if you can.
+			\`!pic\` - shows you another nearby image (if available)
+			*Only works if the original post had an image.`);
 		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendMapMessage: (msg) => {
@@ -141,23 +144,23 @@ const HELPERS = {
 				.then((data) => {
 					if (data.status === "OK") {
 						let meters = HELPERS.numberWithCommas(data.results[0].elevation);
-						let feet = HELPERS.numberWithCommas(Math.floor(parseInt(data.results[0].elevation) *  3.281));
-						resolve({ "meters": meters, "feet": feet });
+						let feet = HELPERS.numberWithCommas(Math.floor(parseInt(data.results[0].elevation) * 3.281));
+						resolve(` · Alt: ${meters} m · ${feet} ft`);;
 					}
 					else {
-						resolve(null);
+						resolve("");
 					}
 				})
 				.catch((error) => {
-					resolve(null);
+					resolve("");
 				});
 		});
 	},
 	numberWithCommas: (x) => {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	},
-	cleanCityName: (set) => {
-		let city = set.city
+	cleanCityName: (city) => {
+		return city
 			.replaceAll("ā", "a")
 			.replaceAll("Ā", "A")
 			.replaceAll("ē", "e")
@@ -193,90 +196,157 @@ const HELPERS = {
 			.replaceAll("Ḑ", "D")
 			.replaceAll("–", "-")
 			.replaceAll("-ŭp", "");
-		if (set.country[0] == "RU" || set.country[0] == "UA" || set.country[0] == "BY") {
-			city = city.replaceAll("’", "");
-		}
-		if (set.country[0] == "KP") {
-			city = city.replaceAll("-ŭp", "");
-		}
-		return city;
 	},
-	getImageFromPage: (url) => {
+	imageMeetsRequirements: (imageURL) => {
+		return ((imageURL.toLowerCase().endsWith(".jpg")
+			|| imageURL.toLowerCase().endsWith(".gif")
+			|| imageURL.toLowerCase().includes("collage")
+			|| imageURL.toLowerCase().includes("montage")
+			|| imageURL.toLowerCase().includes("montaje")
+			|| imageURL.toLowerCase().includes("collection")
+		) && (
+			!imageURL.toLowerCase().includes("_map_")
+			&& !imageURL.toLowerCase().includes("_map.")
+			&& !imageURL.toLowerCase().includes("map_")
+			&& !imageURL.toLowerCase().includes("flag_")
+			&& !imageURL.toLowerCase().includes("_flag_")
+			&& !imageURL.toLowerCase().includes("_flag.")
+			&& !imageURL.toLowerCase().includes("coat_of_arm")
+			&& !imageURL.toLowerCase().includes("bandera")
+			&& !imageURL.toLowerCase().includes("bandeira")
+		));
+	},
+	getImageFromPage: (name) => {
 		return new Promise((resolve, reject) => {
+			let url = `https://en.wikipedia.org/wiki/${encodeURI(name)}`;
+			// console.log(`${HELPERS.formatDate(new Date())} · Searching in ${url}`);
 			FETCH(url)
-			.then((response) => {
-				if(response.status === 200){
-					return response.text();
-				}
-				else{
-					return null;
-				}
-			})
-			.then((body) => {
-				if(body){
-					const $ = CHEERIO.load(body);
-					$("a[class=image]")
-						.each((index, element) => {
-							let imageLink = $(element).attr("href");
-							if(imageLink.toLowerCase().endsWith(".jpg")){
-								if(imageLink.includes("/wiki/File:")){
-									resolve(imageLink.replace("/wiki/File:", "https://commons.wikimedia.org/wiki/Special:FilePath/"));
-								}
+				.then((response) => {
+					if (response.status === 200) {
+						return response.text();
+					}
+					else {
+						// console.log(`Page respond with ${response.status}`);
+						return null;
+					}
+				})
+				.then((body) => {
+					if (body) {
+						const $ = CHEERIO.load(body);
+						let metaImage = $("meta[property='og:image']").attr("content") || "";
+						// Check meta image requirements
+						if (HELPERS.imageMeetsRequirements(metaImage)) {
+							resolve({
+								"image": metaImage,
+								"distance": "",
+								"wikilink": url
+							});
+						}
+						// Meta Image didn't meet the requirements
+						else {
+							let resolved = false;
+							// Looking for images in page
+							$("a[class=image]")
+								.each((index, element) => {
+									let imageLink = $(element).attr("href");
+									if (imageLink.includes("/wiki/File:") && HELPERS.imageMeetsRequirements(imageLink) && !resolved) {
+										resolved = true;
+										imageLink = imageLink.replace("/wiki/File:", "https://commons.wikimedia.org/wiki/Special:FilePath/");
+										resolve({
+											"image": imageLink,
+											"distance": "",
+											"wikilink": url
+										});
+									}
+								});
+							// If no image found in the article
+							if (!resolved) {
+								// console.log("Page exists but no image in meta or within the page");
+								resolve(null);
 							}
-						});
+						}
+					}
+					// No body
+					else {
+						resolve(null);
+					}
+				})
+				.catch((error) => {
+					console.log("Error", error);
 					resolve(null);
-				}
-				else{
-					console.log("Page does not respond with 200");
-					resolve(null);
-				}
-			})
-			.catch((error) => {
-				console.log("Error", error);
-				resolve(null);
-			});
+				});
 		});
 	},
-	getPage: (page) => {
-		FETCH(page)
-			.then((response) => {
-				if (response.status === 200) {
-					return response.text();
-				}
-				else {
-					return null;
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+	getMapImage: (lat, lon, meters) => {
+		let bBox = HELPERS.getBBox({ "lat": lat, "lon": lon }, meters);
+		let distance = "";
+		switch (meters) {
+			case 5000:
+				distance = " · 0-5 km away";
+				break;
+			case 20000:
+				distance = " · 3.5-20 km away";
+				break;
+			case 50000:
+				distance = " · 14-50 km away";
+				break;
+			case 100000:
+				distance = " · 35-100 km away";
+				break;
+			case 200000:
+				distance = " · 70-200 km away";
+				break;
+			case 300000:
+				distance = " · 140-300 km away";
+				break;
+			default:
+				distance = ""
+				break;
+		}
+
+		let mapImgURL = `https://graph.mapillary.com/images?access_token=${process.env.MAP_TOKEN}&bbox=${bBox}&fields=thumb_1024_url&limit=1`;
+		// console.log(`${HELPERS.formatDate(new Date())} · Mapillary attempt at ${meters} meters.`);
+		return new Promise((resolve, reject) => {
+			FETCH(mapImgURL)
+				.then((response) => {
+					return response.status === 200 ? response.json() : null;
+				}).then((data) => {
+					if (data && data.data && data.data[0] && data.data[0].thumb_1024_url) {
+						resolve({
+							"image": data.data[0].thumb_1024_url,
+							"distance": distance,
+							"wikilink": null
+						});
+					}
+					else {
+						resolve(null);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		});
 	},
-	isImageValid: (image) => {
-		if (image) {
-			if (image.toLowerCase().endsWith(".jpg") ||
-				image.toLowerCase().endsWith(".gif") ||
-				image.toLowerCase().includes("collage") ||
-				image.toLowerCase().includes("montage")|| 
-				image.toLowerCase().includes("collection")
-			) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			return false;
-		}
+	getBBox: (coords, distance) => {
+		const R_EARTH = 6378.137;
+		const M = (1 / ((2 * Math.PI / 360) * R_EARTH)) / 1000;
+
+		let radianAngleNE = 45 * Math.PI / 180;
+		let xNE = 0 + (distance * Math.cos(radianAngleNE));
+		let yNE = 0 + (distance * Math.sin(radianAngleNE));
+		let latNE = coords.lat + (yNE * M);
+		let lonNE = coords.lon + (xNE * M) / Math.cos(coords.lat * (Math.PI / 180));
+
+		let radianAngleSW = 225 * Math.PI / 180;
+		let xSW = 0 + (distance * Math.cos(radianAngleSW));
+		let ySW = 0 + (distance * Math.sin(radianAngleSW));
+		let latSW = coords.lat + (ySW * M);
+		let lonSW = coords.lon + (xSW * M) / Math.cos(coords.lat * (Math.PI / 180));
+
+		return `${lonSW},${latSW},${lonNE},${latNE}`;
 	},
 	formatDate: (date) => {
-		return `${
-			(date.getMonth() + 1).toString().padStart(2, "0")}/${
-			date.getDate().toString().padStart(2, "0")}/${
-			date.getFullYear().toString().padStart(4, "0")} ${
-			date.getHours().toString().padStart(2, "0")}:${
-			date.getMinutes().toString().padStart(2, "0")}:${
-			date.getSeconds().toString().padStart(2, "0")}`;
+		return `${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getDate().toString().padStart(2, "0")}/${date.getFullYear().toString().padStart(4, "0")} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
 	}
 }
 

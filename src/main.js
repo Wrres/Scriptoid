@@ -1,6 +1,5 @@
 require("dotenv").config();
-//const runServer = require("./Server");
-const { Client, Intents, MessageEmbed, MessageAttachment } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 
 const Round = require("./utils/Round");
 const RoundCity = require("./utils/RoundCity");
@@ -47,9 +46,9 @@ const RUTOWNS = require("./sets/rutowns.js");
 const KRCITIES = require("./sets/krcities.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
+// const USFLAGS = require("./sets/usflags.js");
 const CITYGUESS = require("./sets/cityguess.js");
 const CGTEST = require("./sets/cgtest.js");
-const { MAX_ROUNDS_CITY } = require("./utils/Helpers");
 
 // Ignore messages starting with (from scores)
 const IGNORES = ["@", "!", "<"];
@@ -261,6 +260,10 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!uscapitals")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, USCAPITALS) });
 		}
+		// USFLAGS
+		// else if (msg.content.toLowerCase().startsWith("!usflags")) {
+		// 	CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USFLAGS) });
+		// }
 		// CITYGUESS
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
@@ -294,7 +297,19 @@ CLIENT.on("messageCreate", async (msg) => {
 			if (channelContainsActiveGame(msg.channel.id)) {
 				// There is one, we need to get it's object and call end
 				let round = getRoundForChannelId(msg.channel.id);
-				round.end(msg);
+				round.end();
+			}
+		}
+
+		// PIC
+		if (msg.content.toLowerCase() === "!pic") {
+			// First we need to check if there is a round active in this channel
+			if (channelContainsActiveGame(msg.channel.id)) {
+				// There is one, we need to get it's object and call answer
+				let round = getRoundForChannelId(msg.channel.id);
+				if(round.pic){
+					round.pic();
+				}
 			}
 		}
 

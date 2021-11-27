@@ -155,7 +155,7 @@ class RoundImage {
 		else {
 			this.currentSet = {};
 			this.nextRoundTimeout = setTimeout(() => {
-				this.doSummary(msg);
+				this.doSummary();
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 	}
@@ -163,7 +163,7 @@ class RoundImage {
 	/**
 	 * Do summary
 	 */
-	doSummary(msg) {
+	doSummary() {
 		let summary = "";
 
 		this.users.sort((userA, userB) => {
@@ -192,13 +192,13 @@ class RoundImage {
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 
-	end(msg) {
+	end() {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.letter && this.currentSet.answers){
 			this.channel.send(`The answer was \`${this.currentSet.answers.join("\`, \`")}\`.`);
 		}
-		this.doSummary(msg);
+		this.doSummary();
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 }

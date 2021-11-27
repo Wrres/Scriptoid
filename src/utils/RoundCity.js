@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 const HELPERS = require("./Helpers");
 
 class RoundCity {
-  	constructor(msg, language) {
+	constructor(msg, language) {
 		this.channel = msg.channel;
 		this.language = JSON.parse(JSON.stringify(language));
 		this.rounds = this.getNumberOfRounds(msg);
@@ -22,11 +22,11 @@ class RoundCity {
 		this.sendRandomCharacter(msg);
 	}
 
-	
+
 	/**
 	 * Sends a random character as an embed in chat
 	 */
-	sendRandomCharacter(msg){
+	sendRandomCharacter(msg) {
 		// This will trigger to reveal if nobody got it correct after the given time
 		this.inactivityTimeout = setTimeout(() => {
 			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
@@ -39,11 +39,11 @@ class RoundCity {
 		// Set a current round
 		this.currentSet = this.getSet();
 
-		let footer = this.language.footer;
-		if(this.rounds == 1){
+		let footer = this.language.footerCountry;
+		if (this.rounds == 1) {
 			footer += `\n${this.rounds} round left.`;
 		}
-		if(this.rounds > 1){
+		if (this.rounds > 1) {
 			footer += `\n${this.rounds} rounds left.`;
 		}
 
@@ -51,13 +51,13 @@ class RoundCity {
 		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
 			.then((data) => {
 				if (data) {
-					elevation = ` · Alt: ${data.meters} m · ${data.feet} ft`;
+					elevation = data;
 				}
 				const messageEmbed = new MessageEmbed()
 					.setColor("#0099ff")
 					.setTitle(`${this.currentSet.city}`)
 					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
-				this.channel.send({"embeds": [messageEmbed]});
+				this.channel.send({ "embeds": [messageEmbed] });
 			})
 			.catch((error) => {
 				console.log(error);
@@ -70,18 +70,18 @@ class RoundCity {
 	getSet() {
 		return this.sets.shift();
 	}
-	
+
 	/**
 	 * Checks if the command specifies a number of rounds, otherwise it returns 1
 	 */
-	getNumberOfRounds(msg){
+	getNumberOfRounds(msg) {
 		let msgdata = msg.content.split(" ");
 		let rounds = parseInt(msgdata[1]);
-		if(!isNaN(rounds)){			
-			if(rounds < 0){
+		if (!isNaN(rounds)) {
+			if (rounds < 0) {
 				rounds = 1;
 			}
-			if(rounds > HELPERS.MAX_ROUNDS_CITY){
+			if (rounds > HELPERS.MAX_ROUNDS_CITY) {
 				rounds = HELPERS.MAX_ROUNDS_CITY;
 			}
 			return rounds;
@@ -89,25 +89,25 @@ class RoundCity {
 		return 1;
 	}
 
-	check(msg){
-		if(this.currentSet.country){
-			
+	check(msg) {
+		if (this.currentSet.country) {
+
 			let match = this.currentSet.country.filter((answer) => answer.toLowerCase() === msg.content.toLowerCase());
 
-			if(match.length){
+			if (match.length) {
 				this.addCorrect(msg);
 				this.resetRound(msg);
 				msg.react("✅");
 			}
-			else{
+			else {
 				this.addIncorrect(msg);
 				msg.react("❌");
 			}
 		}
 	}
 
-	answer(msg){
-		if(this.currentSet.country){
+	answer(msg) {
+		if (this.currentSet.country) {
 			clearTimeout(this.inactivityTimeout);
 			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
 			this.resetRound(msg);
@@ -117,16 +117,16 @@ class RoundCity {
 	/**
 	 * Add correct answer
 	 */
-	addCorrect(msg){
+	addCorrect(msg) {
 		let user = this.users.find((user) => user.id === msg.author.id);
-		if(user){
+		if (user) {
 			user.correct = user.correct + 1;
 		}
-		else{
+		else {
 			this.users.push({
-				"id":  msg.author.id,
-				"username":  msg.author.username,
-				"discriminator":  msg.author.discriminator,
+				"id": msg.author.id,
+				"username": msg.author.username,
+				"discriminator": msg.author.discriminator,
 				"correct": 1,
 				"incorrect": 0
 			});
@@ -136,16 +136,16 @@ class RoundCity {
 	/**
 	 * Add incorrect answer
 	 */
-	addIncorrect(msg){
+	addIncorrect(msg) {
 		let user = this.users.find((user) => user.id === msg.author.id);
-		if(user){
+		if (user) {
 			user.incorrect = user.incorrect + 1;
 		}
-		else{
+		else {
 			this.users.push({
-				"id":  msg.author.id,
-				"username":  msg.author.username,
-				"discriminator":  msg.author.discriminator,
+				"id": msg.author.id,
+				"username": msg.author.username,
+				"discriminator": msg.author.discriminator,
 				"correct": 0,
 				"incorrect": 1
 			});
@@ -156,18 +156,18 @@ class RoundCity {
 	 * Resets a round if there are no rounds left
 	 * otherway it triggers a new one
 	 */
-	resetRound(msg){
+	resetRound(msg) {
 		clearTimeout(this.inactivityTimeout);
-		if(this.rounds > 0){
+		if (this.rounds > 0) {
 			this.currentSet = {};
 			this.nextRoundTimeout = setTimeout(() => {
 				this.sendRandomCharacter(msg);
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
-		else{
+		else {
 			this.currentSet = {};
 			this.nextRoundTimeout = setTimeout(() => {
-				this.doSummary(msg);
+				this.doSummary();
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 	}
@@ -175,17 +175,17 @@ class RoundCity {
 	/**
 	 * Do summary
 	 */
-	doSummary(msg){
+	doSummary() {
 		let summary = "";
 
 		this.users.sort((userA, userB) => {
-			if(((userA.correct * 5) - userA.incorrect) > ((userB.correct * 5) - userB.incorrect)){
+			if (((userA.correct * 5) - userA.incorrect) > ((userB.correct * 5) - userB.incorrect)) {
 				return -1;
 			}
-			else if(((userA.correct * 5 ) - userA.incorrect) < ((userB.correct * 5) - userB.incorrect)){
+			else if (((userA.correct * 5) - userA.incorrect) < ((userB.correct * 5) - userB.incorrect)) {
 				return 1;
 			}
-			else{
+			else {
 				return 0;
 			}
 		});
@@ -194,23 +194,23 @@ class RoundCity {
 			let media = user.correct * 5 - user.incorrect;
 			summary += `✅ ${user.correct} · ❌ ${user.incorrect} · ⚖️ ${media} · ${user.username}\n`;
 		});
-		if(summary != ""){
+		if (summary != "") {
 			const messageEmbed = new MessageEmbed()
 				.setColor("#0099ff")
 				.setTitle("Scores")
 				.setDescription(summary);
-			this.channel.send({"embeds": [messageEmbed]});
+			this.channel.send({ "embeds": [messageEmbed] });
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 
-	end(msg){
+	end() {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
-		if(this.currentSet.city && this.currentSet.country){
+		if (this.currentSet.city && this.currentSet.country) {
 			this.channel.send(`The answer for \`${this.currentSet.city}\` was ${this.currentSet.country.join(", ")}.`);
 		}
-		this.doSummary(msg);
+		this.doSummary();
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 }

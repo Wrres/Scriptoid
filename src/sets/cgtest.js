@@ -1,7 +1,18 @@
 const CITYGUESS = {
-	"footer": "Guess the country the given city is in.",
-	"footer1": "Guess where the city is by using the !map.",
+	"footerCountry": "Guess the country the given city is in.",
+	"footerGuess": "Guess where the city is by using the !map.",
 	"sets": [
+		{
+			"city": "Mancherāl",
+			"pop": 77998,
+			"lat": 18.87074,
+			"lon": 79.42863,
+			"sub": "Telangana",
+			"country": [
+					"IN",
+					"India"
+			]
+		},
 		{
 			"city": "Straelen",
 			"pop": 15325,
@@ -22,17 +33,6 @@ const CITYGUESS = {
 			"country": [
 				"AR",
 				"Argentina"
-			]
-		},
-		{
-			"city": "Mancherāl",
-			"pop": 77998,
-			"lat": 18.87074,
-			"lon": 79.42863,
-			"sub": "Telangana",
-			"country": [
-					"IN",
-					"India"
 			]
 		},
 		{
@@ -92,7 +92,53 @@ const CITYGUESS = {
 				"Australia"
 			]
 		},
+		{
+			"city": "Safaga",
+			"pop": 32944,
+			"lat": 26.74906,
+			"lon": 33.93891,
+			"sub": "Red Sea",
+			"country": [
+				"EG",
+				"Egypt"
+			]
+		},
+		{
+			"city": "Dingley Village",
+			"pop": 10191,
+			"lat": -37.9827,
+			"lon": 145.1342,
+			"sub": "Victoria",
+			"country": [
+				"AU",
+				"Australia"
+			]
+		},
+		{
+			"city": "Buenos Aires",
+			"pop": 11680,
+			"lat": 9.17189,
+			"lon": -83.33417,
+			"sub": "Puntarenas",
+			"country": [
+				"CR",
+				"Costa Rica"
+			]
+		},
+		{
+			"city": "Baley",
+			"pop": 13404,
+			"lat": 51.58166,
+			"lon": 116.63395,
+			"sub": "Zabaykalsky Krai",
+			"country": [
+				"RU",
+				"Russia",
+				"Russian Federation"
+			]
+		},
 	]
 };
 
 module.exports = CITYGUESS;
+

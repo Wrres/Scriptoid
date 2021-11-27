@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 const HELPERS = require("./Helpers");
 
 class Round {
-  	constructor(msg, language) {
+	constructor(msg, language) {
 		this.channel = msg.channel;
 		this.language = JSON.parse(JSON.stringify(language));
 		this.rounds = this.getNumberOfRounds(msg);
@@ -50,6 +50,9 @@ class Round {
 			.setColor("#0099ff")
 			.setTitle(`${this.currentSet.letter}`)
 			.setFooter(footer);
+			if(this.currentSet.flag){
+				messageEmbed.setImage(this.currentSet.flag);
+			}
 		this.channel.send({"embeds": [messageEmbed]});
 	}
 
@@ -171,7 +174,7 @@ class Round {
 		else{
 			this.currentSet = {};
 			this.nextRoundTimeout = setTimeout(() => {
-				this.doSummary(msg);
+				this.doSummary();
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 	}
@@ -179,7 +182,7 @@ class Round {
 	/**
 	 * Do summary
 	 */
-	doSummary(msg){
+	doSummary(){
 		let summary = "";
 
 		this.users.sort((userA, userB) => {
@@ -208,7 +211,7 @@ class Round {
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 
-	end(msg){
+	end(){
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.letter && this.currentSet.answers){
@@ -219,7 +222,7 @@ class Round {
 				this.channel.send(`The answers for \`${this.currentSet.letter}\` were ${this.currentSet.answers.join(", ")}.`);
 			}
 		}
-		this.doSummary(msg);
+		this.doSummary();
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 }

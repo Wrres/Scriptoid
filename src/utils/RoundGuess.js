@@ -1,6 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const CHEERIO = require("cheerio");
-const FETCH = require("node-fetch");
 
 const HELPERS = require("./Helpers");
 
@@ -32,18 +30,18 @@ class RoundGuess {
 	/**
 	 * Sends a random character as an embed in chat
 	 */
-	sendRandomCharacter(msg) {
+	async sendRandomCharacter(msg) {
 		this.channel.sendTyping();
 		this.inactivityTimeout = setTimeout(() => {
 			setTimeout(() => {
-				this.doRoundSummary(msg);
+				this.doRoundSummary();
 				this.resetRound(msg);
 			}, 500);
 		}, HELPERS.SECONDS_BEFORE_REVEAL_GUESS * 1000);
-		// This will send a message 15 seconds prior to the round ending
+		// This will send a message 20 seconds prior to the round ending
 		this.roundLeftTimeout = setTimeout(() => {
-			this.channel.send(`⏰ **15 seconds remaining.**`);
-		}, (HELPERS.SECONDS_BEFORE_REVEAL_GUESS * 1000) - 15000);
+			this.channel.send(`⏰ **20 seconds remaining.**`);
+		}, (HELPERS.SECONDS_BEFORE_REVEAL_GUESS * 1000) - 20000);
 
 		// Decrement rounds left
 		this.rounds--;
@@ -53,7 +51,7 @@ class RoundGuess {
 		// Set a current round
 		this.currentSet = this.getSet();
 
-		let footer = this.language.footer1;
+		let footer = this.language.footerGuess;
 		if (this.rounds == 1) {
 			footer += `\n${this.rounds} round left.`;
 		}
@@ -61,162 +59,45 @@ class RoundGuess {
 			footer += `\n${this.rounds} rounds left.`;
 		}
 
-		let elevation = "";
+		this.currentSet.altitude = await HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon);
 
-		HELPERS.getElevation(this.currentSet.lat, this.currentSet.lon)
-			.then((data) => {
-				if (data) {
-					elevation = ` · Alt: ${data.meters} m · ${data.feet} ft`;
-				}
+		const messageEmbed = new MessageEmbed();
+		messageEmbed.setColor("#0099ff");
+		messageEmbed.setTitle(`${this.currentSet.city}`);
 
-				// this.currentSet.city = "Dandenong";
-				// this.currentSet.country[0] = "AU";
-				// this.currentSet.country[1] = "Australia";
-				// this.currentSet.sub = "Victoria";
-				
-				const messageEmbed = new MessageEmbed();
-				messageEmbed.setColor("#0099ff");
-				messageEmbed.setTitle(`${this.currentSet.city}`);
-				messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
+		let city = HELPERS.cleanCityName(this.currentSet.city);
+		let citySub = `${city},_${this.currentSet.sub}`;
+		let cityCountry = `${city},_${this.currentSet.country[1]}`;
 
-				// console.log("City", this.currentSet.city);
+		let imageData = await HELPERS.getImageFromPage(citySub) ||
+			await HELPERS.getImageFromPage(cityCountry) ||
+			await HELPERS.getImageFromPage(city);
+		
+		if(!imageData){
+			imageData = await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 5000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 20000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 50000);
+		}
+		if(!imageData){
+			imageData = await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 100000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 200000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 300000);
+		}
 
-				let cityClean = HELPERS.cleanCityName(this.currentSet);
-
-				let cityURI = encodeURI(cityClean);
-				let pageCity = HELPERS.BASE_URL + cityURI;
-				
-				// console.log("PageCity", pageCity);
-
-				// setTimeout(() => {
-				// 	this.channel.send(pageCity);
-				// }, 1000);
-				
-				let pageSub = pageCity + ',_' + encodeURI(this.currentSet.sub);
-				// console.log("PageSub", pageSub);
-				// setTimeout(() => {
-				// 	this.channel.send(pageSub);
-				// }, 2000);
-				this.getCityImage(pageSub, true)
-					.then((response) => {
-						if(response == "SEND"){
-							this.channel.send({"embeds": [messageEmbed]});
-						}
-						else if(response){
-							messageEmbed.setImage(response);
-							this.channel.send({"embeds": [messageEmbed]});
-						}
-						else {
-						let pageCountry = pageCity + ',_' + encodeURI(this.currentSet.country[1]);
-						// console.log("PageCountry", pageCountry);
-						// setTimeout(() => {
-						// 	this.channel.send(pageCountry);
-						// }, 2000);
-						this.getCityImage(pageCountry, true)
-							.then((response) => {
-								if(response == "SEND"){
-									this.channel.send({"embeds": [messageEmbed]});
-								}
-								else if(response){
-									messageEmbed.setImage(response);
-									this.channel.send({"embeds": [messageEmbed]});
-								}
-								else{
-									this.getCityImage(pageCity, false)
-										.then((response) => {
-											if(response == "SEND"){
-												this.channel.send({"embeds": [messageEmbed]});
-											}
-											else if(response){
-												messageEmbed.setImage(response);
-												this.channel.send({"embeds": [messageEmbed]});
-											}
-											else{
-												this.channel.send({"embeds": [messageEmbed]});
-											}
-										})
-								}
-							})
-						}
-					});
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}
-
-	getCityImage(page, continueOnError){
-		return new Promise((resolve, reject) => {
-			FETCH(page)
-			.then((response) => {
-				if(response.status === 200){
-					return response.text();
-				}
-				else{
-					return null;
-				}
-			})
-			.then((data) => {
-				if(data){
-					const $ = CHEERIO.load(data);
-					let image = $("meta[property='og:image']").attr("content") || null;
-
-					// console.log("Image", image);
-
-					if(image){
-						if( image.toLowerCase().endsWith(".jpg")
-							|| image.toLowerCase().endsWith(".gif")
-							|| image.toLowerCase().includes("collage")
-							|| image.toLowerCase().includes("montage")
-							|| image.toLowerCase().includes("collection")
-						){
-							resolve(image);
-						}
-						else{
-							HELPERS.getImageFromPage(page)
-							.then((response) => {
-								if(response){
-									resolve(response);
-								}
-								else{
-									resolve(null);
-								}
-							})
-							.catch((error) => {
-								console.log(error);
-								resolve(null);
-							});
-						}
-					}
-					else{
-						HELPERS.getImageFromPage(page)
-							.then((response) => {
-								if(response){
-									resolve(response);
-								}
-								else{
-									resolve(null);
-								}
-							})
-							.catch((error) => {
-								console.log(error);
-								resolve(null);
-							});
-					}
-				}
-				else{
-					if(continueOnError){
-						resolve(null);
-					}
-					else{
-						resolve("SEND");
-					}
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-		});
+		if (imageData) {
+			if (imageData.wikilink) {
+				this.currentSet.wikilink = imageData.wikilink;
+			}
+			// console.log(`${HELPERS.formatDate(new Date())} · IMAGE: ${imageData.image}`);
+			messageEmbed.setImage(imageData.image);
+			messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}${imageData.distance}\n${footer}`);
+			this.channel.send({ "embeds": [messageEmbed] });
+		}
+		else {
+			// console.log("${HELPERS.formatDate(new Date())} · No image found");
+			messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}\n${footer}`);
+			this.channel.send({ "embeds": [messageEmbed] });
+		}
 	}
 
 	/**
@@ -262,7 +143,7 @@ class RoundGuess {
 			if (!isNaN(lat2) && !isNaN(lon2) && lat2 >= -90 && lat2 <= 90 && lon2 >= -180 && lon2 <= 180) {
 
 				let distance = HELPERS.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
-				
+
 				// User exists
 				if (user) {
 					// User exists and his lastRound is lower than currentRound
@@ -280,7 +161,7 @@ class RoundGuess {
 			}
 			else {
 				// User exists
-				if (user){
+				if (user) {
 					// User exists and his lastRound is lower than currentRound
 					// We can tell him to try again
 					if (user.lastRound < this.currentRound) {
@@ -288,20 +169,42 @@ class RoundGuess {
 					}
 				}
 				// User doesn't exist
-				else{
+				else {
 					msg.reply(`your guess is not a coordinate. Check it and post again.`);
 				}
 			}
 		}
 	}
 
+	async pic() {
+		if (!this.roundSummarySent) {
+			let imageData = await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 5000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 20000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 50000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 100000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 200000) ||
+				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 300000);
+
+			if (imageData) {
+				const picEmbed = new MessageEmbed();
+				picEmbed.setColor("#0099ff");
+				picEmbed.setTitle(`Nearby image${imageData.distance}`);
+				picEmbed.setFooter(`${this.currentSet.city} · Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
+				picEmbed.setImage(imageData.image);
+				this.channel.send({ "embeds": [picEmbed] });
+			}
+			else {
+				// Send message with no image
+				this.channel.send(`\*No image found.\*`);
+			}
+		}
+	}
+
 	answer(msg) {
-		if(this.currentSet.country){
+		if (!this.roundSummarySent) {
 			clearTimeout(this.inactivityTimeout);
 			clearTimeout(this.roundLeftTimeout);
-			if(!this.roundSummarySent){
-				this.doRoundSummary(msg);
-			}
+			this.doRoundSummary();			
 			this.resetRound(msg);
 		}
 	}
@@ -349,11 +252,11 @@ class RoundGuess {
 		}
 		else {
 			// this.currentSet = {};
-			if(this.users.length){
+			if (this.users.length) {
 				this.channel.sendTyping();
 			}
 			this.nextRoundTimeout = setTimeout(() => {
-				this.doSummary(msg);
+				this.doSummary();
 			}, HELPERS.SECONDS_AFTER_ANSWER * 1000);
 		}
 	}
@@ -361,7 +264,7 @@ class RoundGuess {
 	/**
 	 * Do summary
 	 */
-	doSummary(msg) {
+	doSummary() {
 		this.finalSummarySent = true;
 		let summary = "";
 
@@ -390,28 +293,28 @@ class RoundGuess {
 		});
 
 		let roundsPadding = 0;
-        let distancesPadding = 0;
+		let distancesPadding = 0;
 
-        this.users.forEach((user) => {
-            roundsPadding = roundsPadding < user.rounds.toString().length ? user.rounds.toString().length : roundsPadding;
-            distancesPadding = distancesPadding < user.distance.toFixed(2).toString().length ? user.distance.toFixed(2).toString().length : distancesPadding;
-        });
+		this.users.forEach((user) => {
+			roundsPadding = roundsPadding < user.rounds.toString().length ? user.rounds.toString().length : roundsPadding;
+			distancesPadding = distancesPadding < user.distance.toFixed(2).toString().length ? user.distance.toFixed(2).toString().length : distancesPadding;
+		});
 
-        this.users.forEach((user, index) => {
-            let medal = this.medals[index] ? this.medals[index] : "";
-            summary += `📏 \`${user.distance.toFixed(2).toString().padStart(distancesPadding, " ")} km\` · 📍 \`${user.rounds.toString().padStart(roundsPadding, " ")}\` · ${user.username} ${medal}\n`;
-        });
+		this.users.forEach((user, index) => {
+			let medal = this.medals[index] ? this.medals[index] : "";
+			summary += `📏 \`${user.distance.toFixed(2).toString().padStart(distancesPadding, " ")} km\` · 📍 \`${user.rounds.toString().padStart(roundsPadding, " ")}\` · ${user.username} ${medal}\n`;
+		});
 		if (summary != "") {
 			const messageEmbed = new MessageEmbed()
 				.setColor("#0099ff")
 				.setTitle("Final scores 🏁")
 				.setDescription(summary);
-				this.channel.send({"embeds": [messageEmbed]});
+			this.channel.send({ "embeds": [messageEmbed] });
 		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 
-	doRoundSummary(msg) {
+	doRoundSummary() {
 		this.roundSummarySent = true;
 		let roundSummary = "";
 
@@ -442,29 +345,34 @@ class RoundGuess {
 			}
 		});
 
+		if (this.currentSet.wikilink) {
+			roundSummary += `[Wikipedia](${this.currentSet.wikilink})`;
+		}
+
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setAuthor("Google Maps 🔗", "https://i.imgur.com/3p5i1wt.png", `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`)
-			.addField(':flag_' + this.currentSet.country[0].toLowerCase() + ': ' + this.currentSet.country[1] + ', ' + this.currentSet.sub, this.currentSet.city, true);
+			// .addField(':flag_' + this.currentSet.country[0].toLowerCase() + ': ' + this.currentSet.country[1] + ', ' + this.currentSet.sub, this.currentSet.city, true);
+			.addField(`:flag_${this.currentSet.country[0].toLowerCase()}: ${this.currentSet.country[1]}`, `${this.currentSet.city} · ${this.currentSet.sub}`, true);
 		if (roundSummary) {
 			messageEmbed.setTitle("Round scores");
 			messageEmbed.setDescription(roundSummary);
 		}
-		this.channel.send({"embeds": [messageEmbed]});
+		this.channel.send({ "embeds": [messageEmbed] });
 	}
 
-	end(msg) {
+	end() {
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		clearTimeout(this.roundLeftTimeout);
 
-		if(!this.roundSummarySent){
-			this.doRoundSummary(msg);
+		if (!this.roundSummarySent) {
+			this.doRoundSummary();
 		}
 
 		setTimeout(() => {
-			if(!this.finalSummarySent){
-				this.doSummary(msg);
+			if (!this.finalSummarySent) {
+				this.doSummary();
 			}
 			HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 		}, 1000);
