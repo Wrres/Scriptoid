@@ -50,7 +50,7 @@ const HELPERS = {
 			\`!rucities #\` - Russian cities 50k+ pop. \`!rutowns\`
 			\`!krcities #\` - South and North Korean cities
 			\`!grplaces #\` - Greek place names (not only Greece)
-			\`!uscapitals #\` - US state capitals
+			\`!uscapitals #\` - US state capitals \`!usflags\`
 			\`!brareacodes #\` - Brazil state area codes \`!brcitycodes\`
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes

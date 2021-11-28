@@ -46,7 +46,7 @@ const RUTOWNS = require("./sets/rutowns.js");
 const KRCITIES = require("./sets/krcities.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
-// const USFLAGS = require("./sets/usflags.js");
+const USFLAGS = require("./sets/usflags.js");
 const CITYGUESS = require("./sets/cityguess.js");
 const CGTEST = require("./sets/cgtest.js");
 
@@ -261,9 +261,9 @@ CLIENT.on("messageCreate", async (msg) => {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, USCAPITALS) });
 		}
 		// USFLAGS
-		// else if (msg.content.toLowerCase().startsWith("!usflags")) {
-		// 	CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USFLAGS) });
-		// }
+		else if (msg.content.toLowerCase().startsWith("!usflags")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USFLAGS) });
+		}
 		// CITYGUESS
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
