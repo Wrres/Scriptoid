@@ -1,7 +1,8 @@
 # Scriptoid
 
 Script learning as a game!
-he!p for commands
+
+`he!p` for commands
 
 ## Git Steps
 

@@ -199,7 +199,6 @@ const HELPERS = {
 	},
 	imageMeetsRequirements: (imageURL) => {
 		return ((imageURL.toLowerCase().endsWith(".jpg")
-			|| imageURL.toLowerCase().endsWith(".gif")
 			|| imageURL.toLowerCase().includes("collage")
 			|| imageURL.toLowerCase().includes("montage")
 			|| imageURL.toLowerCase().includes("montaje")
@@ -212,6 +211,10 @@ const HELPERS = {
 			&& !imageURL.toLowerCase().includes("_flag_")
 			&& !imageURL.toLowerCase().includes("_flag.")
 			&& !imageURL.toLowerCase().includes("coat_of_arm")
+			&& !imageURL.toLowerCase().includes("seal.")
+			&& !imageURL.toLowerCase().includes("seal_")
+			&& !imageURL.toLowerCase().includes("logo.")
+			&& !imageURL.toLowerCase().includes("logo_")
 			&& !imageURL.toLowerCase().includes("bandera")
 			&& !imageURL.toLowerCase().includes("bandeira")
 		));

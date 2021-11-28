@@ -137,6 +137,30 @@ const CITYGUESS = {
 				"Russian Federation"
 			]
 		},
+		{
+			"city": "Madison",
+			"pop": 25799,
+			"lat": 32.46181,
+			"lon": -90.11536,
+			"sub": "Mississippi",
+			"country": [
+				"US",
+				"United States",
+				"United States of America",
+				"USA"
+			]
+		},
+		{
+			"city": "Pikine",
+			"pop": 874062,
+			"lat": 14.76457,
+			"lon": -17.39071,
+			"sub": "Dakar",
+			"country": [
+				"SN",
+				"Senegal"
+			]
+		},
 	]
 };
 
