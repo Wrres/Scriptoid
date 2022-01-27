@@ -363,10 +363,10 @@ function removeChannelFromChannels(id) {
 	CHANNELS = CHANNELS.filter((channel) => { return channel.id != id; });
 }
 
-/*
+
 runServer().then(() => {
 	console.log(`${formatDate(new Date())} · Login attempt`);
 	CLIENT.login(process.env.TOKEN);
 });
-*/
-CLIENT.login(process.env.TOKEN);
+
+//CLIENT.login(process.env.TOKEN);
