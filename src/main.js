@@ -1,11 +1,15 @@
 require("dotenv").config();
 const { Client, Intents } = require("discord.js");
+const runServer = require("./Server");
 
 const Round = require("./utils/Round");
 const RoundCity = require("./utils/RoundCity");
 const RoundGuess = require("./utils/RoundGuess");
 const RoundImage = require("./utils/RoundImage");
+const RoundMap = require("./utils/RoundMap");
 const HELPERS = require("./utils/Helpers");
+const LOGGER = require("./utils/Logger");
+const FC = require("./utils/FilesCleaner");
 
 const CYRILLIC = require("./sets/cyrillic.js");
 const CYRBALKAN = require("./sets/cyrbalkan.js");
@@ -30,6 +34,7 @@ const INDONESIAN = require("./sets/indonesian.js");
 const PREFECTURES = require("./sets/prefectures.js");
 const JPCITIES = require("./sets/jpcities.js");
 const JPCITIESHARD = require("./sets/jpcitieshard.js");
+const JPTOWNS = require("./sets/jptowns.js");
 const KABUPATENS = require("./sets/kabupatens.js");
 const CNPROVINCES = require("./sets/cnprovinces.js");
 const CNCITIES = require("./sets/cncities.js");
@@ -48,6 +53,7 @@ const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
 const USFLAGS = require("./sets/usflags.js");
 const CITYGUESS = require("./sets/cityguess.js");
+const CITYMAP = require("./sets/citymap.js");
 const CGTEST = require("./sets/cgtest.js");
 
 // Ignore messages starting with (from scores)
@@ -58,18 +64,18 @@ let CHANNELS = [];
 const CLIENT = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
 CLIENT.on("ready", () => {
-	console.log(`${HELPERS.formatDate(new Date())} · Logged in as ${CLIENT.user.tag}!`);
+	LOGGER.info(`Logged in as ${CLIENT.user.tag}!`);
 	CLIENT.user.setActivity("he!p for help", { type: "PLAYING" });
 });
 
 CLIENT.on("error", (error) => {
-	console.log(`Error: ${error}`);
+	LOGGER.error(`Error: ${error}`);
 	CLIENT.destroy();
 	CLIENT.login(process.env.TOKEN);
 });
 
 CLIENT.on("invalidated", (invalidated) => {
-	console.log(`Invalidated: ${invalidated}`);
+	LOGGER.error(`Invalidated: ${invalidated}`);
 	CLIENT.destroy();
 	CLIENT.login(process.env.TOKEN);
 });
@@ -196,6 +202,10 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!jpcities")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, JPCITIES) });
 		}
+    // JPTOWNS
+		else if (msg.content.toLowerCase().startsWith("!jptowns")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, JPTOWNS) });
+		}
 		// KABUPATENS
 		else if (msg.content.toLowerCase().startsWith("!kabupatens")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, KABUPATENS) });
@@ -268,9 +278,13 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
 		}
-		// CITYGUESS
+		// CGTEST
 		else if (msg.content.toLowerCase().startsWith("!cgt")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CGTEST) });
+		}
+    // CITYMAP
+		else if (msg.content.toLowerCase().startsWith("!citymap")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundMap(msg, CITYMAP) });
 		}
 		// CITYCOUNTRY
 		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
@@ -363,10 +377,12 @@ function removeChannelFromChannels(id) {
 	CHANNELS = CHANNELS.filter((channel) => { return channel.id != id; });
 }
 
-/*
 runServer().then(() => {
-	console.log(`${formatDate(new Date())} · Login attempt`);
+	console.log(`${HELPERS.formatDate(new Date())} · Login attempt`);
 	CLIENT.login(process.env.TOKEN);
 });
-*/
-CLIENT.login(process.env.TOKEN);
+
+// This triggers the file cleaner
+FC.startCleaner();
+
+// CLIENT.login(process.env.TOKEN);

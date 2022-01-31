@@ -2,7 +2,7 @@ const EXPRESS = require("express");
 
 const SERVER = EXPRESS();
 
-SERVER.use(EXPRESS.static("public"));
+SERVER.use(EXPRESS.static("src/public"));
 
 function runServer() {
 	return new Promise((resolve, reject) => {

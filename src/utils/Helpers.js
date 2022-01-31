@@ -8,6 +8,7 @@ const HELPERS = {
 	SECONDS_BEFORE_REVEAL: 30,
 	SECONDS_BEFORE_REVEAL_CITY: 45,
 	SECONDS_BEFORE_REVEAL_GUESS: 75,
+  SECONDS_BEFORE_REVEAL_MAP: 40,
 	MAX_ROUNDS: 20,
 	MAX_ROUNDS_CITY: 30,
 	EMITTER: new EventEmitter(),
@@ -43,6 +44,7 @@ const HELPERS = {
 			\`!indonesian #\` - 2k most common Indonesian words
 			\`!prefectures #\` - Japanese prefecture names
 			\`!jpcities #\` - Japanese cities 250k+ pop. \`!jpcitieshard\`
+      \`!jptowns #\` - Japanese towns and villages
 			\`!kabupatens #\` - Indonesian regencies (get the province)
 			\`!cnprovinces #\` - Chinese provinces
 			\`!cncities #\` - all Chinese cities
@@ -57,6 +59,7 @@ const HELPERS = {
 			\`!cnplates #\` - Chinese provincial license plates
 			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\` \`!pic\`
 			\`!citycountry #\` - \`!cchelp\` for info and details
+      \`!citymap #\` - guess the city from the map
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.
@@ -194,6 +197,7 @@ const HELPERS = {
 			.replaceAll("’", "")
 			.replaceAll("ḑ", "d")
 			.replaceAll("Ḑ", "D")
+      .replaceAll("ṅ", "ng")
 			.replaceAll("–", "-")
 			.replaceAll("-ŭp", "");
 	},
@@ -350,6 +354,63 @@ const HELPERS = {
 	},
 	formatDate: (date) => {
 		return `${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getDate().toString().padStart(2, "0")}/${date.getFullYear().toString().padStart(4, "0")} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+	},
+	generateCode(length) {
+		const VOWELS = ["A", "E", "I", "O", "U"];
+		const CONSONANTS = ["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"];
+
+		if (length < 4 || length > 16) {
+			return "Invalid length - Must be between 4 and 16";
+		}
+		else {
+			let code = "";
+			for (let index = 0; index < length; index++) {
+				if (index % 2 == 0) {
+					code += CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
+				}
+				else {
+					code += VOWELS[Math.floor(Math.random() * VOWELS.length)];
+				}
+			}
+			if (code.length > 3) {
+				return code;
+			}
+			else {
+				return "Something went wrong";
+			}
+		}
+	},
+	getEditDistance(a, b) {
+		if (a.length == 0) return b.length;
+		if (b.length == 0) return a.length;
+
+		let matrix = [];
+
+		// increment along the first column of each row
+		let i;
+		for (i = 0; i <= b.length; i++) {
+			matrix[i] = [i];
+		}
+
+		// increment each column in the first row
+		let j;
+		for (j = 0; j <= a.length; j++) {
+			matrix[0][j] = j;
+		}
+
+		// Fill in the rest of the matrix
+		for (i = 1; i <= b.length; i++) {
+			for (j = 1; j <= a.length; j++) {
+				if (b.charAt(i - 1) == a.charAt(j - 1)) {
+					matrix[i][j] = matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // substitution
+						Math.min(matrix[i][j - 1] + 1, // insertion
+							matrix[i - 1][j] + 1)); // deletion
+				}
+			}
+		}
+		return matrix[b.length][a.length];
 	}
 }
 

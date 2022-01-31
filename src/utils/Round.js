@@ -131,9 +131,9 @@ class Round {
 		}
 		else{
 			this.users.push({
-				"id":  msg.author.id,
-				"username":  msg.author.username,
-				"discriminator":  msg.author.discriminator,
+				"id": msg.author.id,
+				"username": msg.author.username,
+				"discriminator": msg.author.discriminator,
 				"correct": 1,
 				"incorrect": 0
 			});
@@ -150,9 +150,9 @@ class Round {
 		}
 		else{
 			this.users.push({
-				"id":  msg.author.id,
-				"username":  msg.author.username,
-				"discriminator":  msg.author.discriminator,
+				"id": msg.author.id,
+				"username": msg.author.username,
+				"discriminator": msg.author.discriminator,
 				"correct": 0,
 				"incorrect": 1
 			});
