@@ -59,7 +59,7 @@ const HELPERS = {
 			\`!cnplates #\` - Chinese provincial license plates
 			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\` \`!pic\`
 			\`!citycountry #\` - \`!cchelp\` for info and details
-      \`!citymap #\` - guess the city from the map
+      \`!citymap #\` - guess the city from the map \`nm\` \`dm\` \`tm\`
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.

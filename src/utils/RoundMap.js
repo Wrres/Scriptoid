@@ -17,6 +17,8 @@ class RoundMap {
 		this.inactivityTimeout;
 		this.nextRoundTimeout;
 		this.imagePosted = false;
+		this.mode = this.getMode(msg);
+
 		this.sendRandomCharacter(msg);
 	}
 
@@ -47,18 +49,60 @@ class RoundMap {
 			footer += `\n${this.rounds} rounds left.`;
 		}
 		// https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
-		// https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}
+		// https://{s}.google.com/vt/lyrs=s,t&x={x}&y={y}&z={z}
 		// https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}
 		// https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png
+		// https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}
 		const OPTIONS = {
 			width: 960,
 			height: 520,
 			subdomains: ["mt0", "mt1", "mt2", "mt3"],
-			tileUrl: "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+			tileUrl: "https://{s}.google.com/vt/lyrs=s,t&x={x}&y={y}&z={z}"
 		};
-		
-		const MAP = new StaticMaps(OPTIONS);
-				
+
+		const NM_OPTIONS = {
+			width: 960,
+			height: 520,
+			subdomains: "abcd",
+			minZoom: 1,
+			maxZoom: 8,
+			format: "jpg",
+			time: "",
+			tilematrixset: 'GoogleMapsCompatible_Level',
+		    tileUrl: "https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg"
+		};
+
+		const DM_OPTIONS = {
+			width: 960,
+			height: 520,
+			tileUrl: "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+			subdomains: "abcd",
+			maxZoom: 20
+		};
+
+		const TM_OPTIONS = {
+			width: 960,
+			height: 520,
+			tileUrl: "https://stamen-tiles-a.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png",
+			subdomains: "abcd",
+			ext: "png"
+		};
+
+		let MAP;
+
+		if(this.mode == "nm"){
+			MAP = new StaticMaps(NM_OPTIONS);
+		}
+		else if(this.mode == "dm"){
+			MAP = new StaticMaps(DM_OPTIONS);
+		}
+		else if(this.mode == "tm"){
+			MAP = new StaticMaps(TM_OPTIONS);
+		}
+		else if(this.mode == "sat"){
+			MAP = new StaticMaps(OPTIONS);
+		}
+
 		async function doRender(lat, lon, id){
 			let dir = `./src/public/citymap`;
 			if (!FS.existsSync(dir)) {
@@ -71,9 +115,9 @@ class RoundMap {
 			}
 			
 			const MARKER = {
-				img: `https://ggutils.vercel.app/images/01.png`,
+				img: `./src/utils/pin.png`,
 				offsetX: 25,
-				offsetY: 40,
+				offsetY: 50,
 				width: 50,
 				height: 50,
 				coord : [lon, lat]
@@ -83,9 +127,9 @@ class RoundMap {
 			let code = HELPERS.generateCode(16);
 
 			await MAP.render([lon, lat], 6);
-			await MAP.image.save(`./src/public/citymap/${id}/${code}.png`);
+			await MAP.image.save(`./src/public/citymap/${id}/${code}.jpg`, { "quality": 80 });
 
-			return `citymap/${id}/${code}.png`;
+			return `citymap/${id}/${code}.jpg`;
 		}
 
 		this.imagePosted = false;
@@ -130,6 +174,21 @@ class RoundMap {
 			return rounds;
 		}
 		return 1;
+	}
+
+	getMode(msg) {
+		if(msg.content.toLowerCase().includes("nm")){
+			return "nm";
+		}
+		else if(msg.content.toLowerCase().includes("dm")){
+			return "dm";
+		}
+		else if(msg.content.toLowerCase().includes("tm")){
+			return "tm";
+		}
+		else{
+			return "sat";
+		}
 	}
 
 	check(msg) {

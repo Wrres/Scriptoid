@@ -1427,11 +1427,6 @@ const CITYMAP = {
 			"lon": -90.51327
 		},
 		{
-			"city": "Kowloon",
-			"lat": 22.31667,
-			"lon": 114.18333
-		},
-		{
 			"city": "Hong Kong",
 			"lat": 22.27832,
 			"lon": 114.17469
@@ -2597,24 +2592,9 @@ const CITYMAP = {
 			"lon": 35.00854
 		},
 		{
-			"city": "Alvaro Obregon",
-			"lat": 19.35867,
-			"lon": -99.20329
-		},
-		{
-			"city": "Gustavo Adolfo Madero",
-			"lat": 19.49392,
-			"lon": -99.11075
-		},
-		{
 			"city": "Tuxtla",
 			"lat": 16.75973,
 			"lon": -93.11308
-		},
-		{
-			"city": "Tlalpan",
-			"lat": 19.29513,
-			"lon": -99.16206
 		},
 		{
 			"city": "Tlalnepantla",
@@ -2622,7 +2602,7 @@ const CITYMAP = {
 			"lon": -99.19538
 		},
 		{
-			"city": "Santa Maria Chimalhuacan",
+			"city": "Chimalhuacan",
 			"lat": 19.42155,
 			"lon": -98.95038
 		},
@@ -2637,7 +2617,7 @@ const CITYMAP = {
 			"lon": -98.20346
 		},
 		{
-			"city": "Naucalpan de Juarez",
+			"city": "Naucalpan",
 			"lat": 19.47851,
 			"lon": -99.23963
 		},
@@ -2647,22 +2627,12 @@ const CITYMAP = {
 			"lon": -89.61696
 		},
 		{
-			"city": "Iztapalapa",
-			"lat": 19.35529,
-			"lon": -99.06224
-		},
-		{
-			"city": "Ecatepec de Morelos",
+			"city": "Ecatepec",
 			"lat": 19.60492,
 			"lon": -99.06064
 		},
 		{
-			"city": "Coyoacan",
-			"lat": 19.3467,
-			"lon": -99.16174
-		},
-		{
-			"city": "Ciudad Nezahualcoyotl",
+			"city": "Nezahualcoyotl",
 			"lat": 19.40061,
 			"lon": -99.01483
 		},
@@ -2677,14 +2647,9 @@ const CITYMAP = {
 			"lon": -86.84656
 		},
 		{
-			"city": "Acapulco de Juarez",
+			"city": "Acapulco",
 			"lat": 16.84942,
 			"lon": -99.90891
-		},
-		{
-			"city": "Cuauhtemoc",
-			"lat": 19.44506,
-			"lon": -99.14612
 		},
 		{
 			"city": "Zapopan",
@@ -2757,7 +2722,7 @@ const CITYMAP = {
 			"lon": -103.39182
 		},
 		{
-			"city": "Victoria de Durango",
+			"city": "Durango",
 			"lat": 24.02032,
 			"lon": -104.65756
 		},
@@ -3547,44 +3512,14 @@ const CITYMAP = {
 			"lon": 35.32531
 		},
 		{
-			"city": "Uskudar",
-			"lat": 41.02274,
-			"lon": 29.01366
-		},
-		{
-			"city": "Umraniye",
-			"lat": 41.01643,
-			"lon": 29.12476
-		},
-		{
 			"city": "Istanbul",
 			"lat": 41.01384,
 			"lon": 28.94966
 		},
 		{
-			"city": "Esenler",
-			"lat": 41.0435,
-			"lon": 28.87619
-		},
-		{
 			"city": "Bursa",
 			"lat": 40.19559,
 			"lon": 29.06013
-		},
-		{
-			"city": "Bagcilar",
-			"lat": 41.03903,
-			"lon": 28.85671
-		},
-		{
-			"city": "Cankaya",
-			"lat": 39.9179,
-			"lon": 32.86268
-		},
-		{
-			"city": "Bahcelievler",
-			"lat": 41.00231,
-			"lon": 28.8598
 		},
 		{
 			"city": "Taipei",
@@ -3750,11 +3685,6 @@ const CITYMAP = {
 			"city": "Boston",
 			"lat": 42.35843,
 			"lon": -71.05977
-		},
-		{
-			"city": "South Boston",
-			"lat": 42.33343,
-			"lon": -71.04949
 		},
 		{
 			"city": "Detroit",
