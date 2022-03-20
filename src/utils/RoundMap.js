@@ -3,6 +3,7 @@ const StaticMaps = require("staticmaps");
 const FS = require("fs");
 
 const HELPERS = require("./Helpers");
+const DEBUGGER = require("./Debugger");
 
 const URL = process.env.BASE_URL;
 
@@ -144,7 +145,9 @@ class RoundMap {
 			this.imagePosted = true;
 			})
 			.catch((error) => {
-				console.log(error);
+				DEBUGGER.debug("STATIC MAP ERROR");
+				DEBUGGER.debug(`${this.currentSet.lat} - ${this.currentSet.lon} - ${this.channel.id}`)
+				DEBUGGER.debug(error);
 			});
 	}
 
@@ -302,13 +305,11 @@ class RoundMap {
 				.setTitle("Scores")
 				.setDescription(summary);
 			this.channel.send({"embeds": [messageEmbed]});
-		}		
-		this.deleteDirectory(this.channel.id);
+		}
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 
 	end() {
-		this.deleteDirectory(this.channel.id);
 		clearTimeout(this.inactivityTimeout);
 		clearTimeout(this.nextRoundTimeout);
 		if(this.currentSet.city){
@@ -316,10 +317,6 @@ class RoundMap {
 		}
 		this.doSummary();
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
-	}
-
-	deleteDirectory(id) {
-		//FS.rmSync(`./src/public/citymap/${id}`, { recursive: true, force: true });
 	}
 }
 

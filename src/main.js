@@ -368,6 +368,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		}
 	    // CITYMAP
 		else if (msg.content.toLowerCase().startsWith("!citymap")) {
+			//msg.channel.send("Gamemode Temporarily unavailable");
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundMap(msg, CITYMAP) });
 		}
 		// CITYCOUNTRY
