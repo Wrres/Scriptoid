@@ -25,6 +25,7 @@ class RoundGuess {
 		this.roundSummarySent = false;
 		this.finalSummarySent = false;
 		this.sendRandomCharacter(msg);
+		this.nn = this.getNn(msg);
 	}
 
 	/**
@@ -63,7 +64,10 @@ class RoundGuess {
 
 		const messageEmbed = new MessageEmbed();
 		messageEmbed.setColor("#0099ff");
-		messageEmbed.setTitle(`${this.currentSet.city}`);
+
+		if (!this.nn) {
+			messageEmbed.setTitle(`${this.currentSet.city}`);
+		}
 
 		let city = HELPERS.cleanCityName(this.currentSet.city);
 		let citySub = `${city},_${this.currentSet.sub}`;
@@ -72,13 +76,13 @@ class RoundGuess {
 		let imageData = await HELPERS.getImageFromPage(citySub) ||
 			await HELPERS.getImageFromPage(cityCountry) ||
 			await HELPERS.getImageFromPage(city);
-		
-		if(!imageData){
+
+		if (!imageData) {
 			imageData = await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 5000) ||
 				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 20000) ||
 				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 50000);
 		}
-		if(!imageData){
+		if (!imageData) {
 			imageData = await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 100000) ||
 				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 200000) ||
 				await HELPERS.getMapImage(this.currentSet.lat, this.currentSet.lon, 300000);
@@ -123,6 +127,10 @@ class RoundGuess {
 			return rounds;
 		}
 		return 1;
+	}
+
+	getNn(msg) {
+		return msg.content.includes("nn");
 	}
 
 	check(msg) {
@@ -189,8 +197,13 @@ class RoundGuess {
 				const picEmbed = new MessageEmbed();
 				picEmbed.setColor("#0099ff");
 				picEmbed.setTitle(`Nearby image${imageData.distance}`);
-				picEmbed.setFooter(`${this.currentSet.city} · Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
 				picEmbed.setImage(imageData.image);
+				if (this.nn) {
+					picEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
+				}
+				else {
+					picEmbed.setFooter(`${this.currentSet.city} · Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
+				}
 				this.channel.send({ "embeds": [picEmbed] });
 			}
 			else {
@@ -204,7 +217,7 @@ class RoundGuess {
 		if (!this.roundSummarySent) {
 			clearTimeout(this.inactivityTimeout);
 			clearTimeout(this.roundLeftTimeout);
-			this.doRoundSummary();			
+			this.doRoundSummary();
 			this.resetRound(msg);
 		}
 	}
@@ -352,7 +365,6 @@ class RoundGuess {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setAuthor("Google Maps 🔗", "https://i.imgur.com/3p5i1wt.png", `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`)
-			// .addField(':flag_' + this.currentSet.country[0].toLowerCase() + ': ' + this.currentSet.country[1] + ', ' + this.currentSet.sub, this.currentSet.city, true);
 			.addField(`:flag_${this.currentSet.country[0].toLowerCase()}: ${this.currentSet.country[1]}`, `${this.currentSet.city} · ${this.currentSet.sub}`, true);
 		if (roundSummary) {
 			messageEmbed.setTitle("Round scores");

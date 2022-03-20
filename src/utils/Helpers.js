@@ -8,7 +8,7 @@ const HELPERS = {
 	SECONDS_BEFORE_REVEAL: 30,
 	SECONDS_BEFORE_REVEAL_CITY: 45,
 	SECONDS_BEFORE_REVEAL_GUESS: 75,
-  SECONDS_BEFORE_REVEAL_MAP: 40,
+	SECONDS_BEFORE_REVEAL_MAP: 40,
 	MAX_ROUNDS: 20,
 	MAX_ROUNDS_CITY: 30,
 	EMITTER: new EventEmitter(),
@@ -44,7 +44,7 @@ const HELPERS = {
 			\`!indonesian #\` - 2k most common Indonesian words
 			\`!prefectures #\` - Japanese prefecture names
 			\`!jpcities #\` - Japanese cities 250k+ pop. \`!jpcitieshard\`
-      \`!jptowns #\` - Japanese towns and villages
+      		\`!jptowns #\` - Japanese towns and villages
 			\`!kabupatens #\` - Indonesian regencies (get the province)
 			\`!cnprovinces #\` - Chinese provinces
 			\`!cncities #\` - all Chinese cities
@@ -53,13 +53,17 @@ const HELPERS = {
 			\`!krcities #\` - South and North Korean cities
 			\`!grplaces #\` - Greek place names (not only Greece)
 			\`!uscapitals #\` - US state capitals \`!usflags\`
+			\`!bollards #\` - guess the country the bollard is from
+			\`!cameras #\` - guess the camera gens in the country
+			\`!usshields #\` - US state highway shields \`!ussecondary\`
+			\`!cashields #\` - Canadian province highway shields
 			\`!brareacodes #\` - Brazil state area codes \`!brcitycodes\`
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes
 			\`!cnplates #\` - Chinese provincial license plates
 			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\` \`!pic\`
 			\`!citycountry #\` - \`!cchelp\` for info and details
-      \`!citymap #\` - guess the city from the map \`nm\` \`dm\` \`tm\`
+      		\`!citymap #\` - \`!cmhelp\` for info and details
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.
@@ -90,11 +94,30 @@ const HELPERS = {
 			All cities 10k+ population in the world (28k cities).
 			*Others can't see your guess message, even if you can.
 			\`!pic\` - shows you another nearby image (if available)
-			*Only works if the original post had an image.`);
+			*Only works if the original post had an image.
+			Game modes:
+			\`!cityguess # nn\` - no city names shown`);
 		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	sendMapMessage: (msg) => {
 		msg.channel.send("Guessing map: <https://bit.ly/GuessingMap> (click on the map and paste here)");
+	},
+	sendCitymapMessage: (msg) => {
+		const messageEmbed = new MessageEmbed()
+			.setColor("#0099ff")
+			.setTitle("CityMap Help")
+			.setDescription(`
+			Guess the city shown on the map.
+			You will have ${HELPERS.SECONDS_BEFORE_REVEAL_MAP} seconds to guess.
+			The correct answer gives 5 points, incorrect -1.
+			The maximum number of rounds is ${HELPERS.MAX_ROUNDS}.
+			All cities 500k+ population in the world.
+      Map type modes:
+      Night mode - \`!cityguess # nm\`
+      Dark mode - \`!cityguess # dm\`
+      Toner mode - \`!cityguess # tm\`
+      *The game images get deleted after an hour.`);
+		msg.channel.send({ "embeds": [messageEmbed] });
 	},
 	getDistanceFromLatLonInKm: (lat1, lon1, lat2, lon2) => {
 		let R = 6371; // Radius of the earth in km
@@ -197,7 +220,7 @@ const HELPERS = {
 			.replaceAll("’", "")
 			.replaceAll("ḑ", "d")
 			.replaceAll("Ḑ", "D")
-      .replaceAll("ṅ", "ng")
+			.replaceAll("ṅ", "ng")
 			.replaceAll("–", "-")
 			.replaceAll("-ŭp", "");
 	},
@@ -208,20 +231,20 @@ const HELPERS = {
 			|| imageURL.toLowerCase().includes("montaje")
 			|| imageURL.toLowerCase().includes("collection")
 		) && (
-			!imageURL.toLowerCase().includes("_map_")
-			&& !imageURL.toLowerCase().includes("_map.")
-			&& !imageURL.toLowerCase().includes("map_")
-			&& !imageURL.toLowerCase().includes("flag_")
-			&& !imageURL.toLowerCase().includes("_flag_")
-			&& !imageURL.toLowerCase().includes("_flag.")
-			&& !imageURL.toLowerCase().includes("coat_of_arm")
-			&& !imageURL.toLowerCase().includes("seal.")
-			&& !imageURL.toLowerCase().includes("seal_")
-			&& !imageURL.toLowerCase().includes("logo.")
-			&& !imageURL.toLowerCase().includes("logo_")
-			&& !imageURL.toLowerCase().includes("bandera")
-			&& !imageURL.toLowerCase().includes("bandeira")
-		));
+				!imageURL.toLowerCase().includes("_map_")
+				&& !imageURL.toLowerCase().includes("_map.")
+				&& !imageURL.toLowerCase().includes("map_")
+				&& !imageURL.toLowerCase().includes("flag_")
+				&& !imageURL.toLowerCase().includes("_flag_")
+				&& !imageURL.toLowerCase().includes("_flag.")
+				&& !imageURL.toLowerCase().includes("coat_of_arm")
+				&& !imageURL.toLowerCase().includes("seal.")
+				&& !imageURL.toLowerCase().includes("seal_")
+				&& !imageURL.toLowerCase().includes("logo.")
+				&& !imageURL.toLowerCase().includes("logo_")
+				&& !imageURL.toLowerCase().includes("bandera")
+				&& !imageURL.toLowerCase().includes("bandeira")
+			));
 	},
 	getImageFromPage: (name) => {
 		return new Promise((resolve, reject) => {
@@ -415,3 +438,4 @@ const HELPERS = {
 }
 
 module.exports = HELPERS;
+

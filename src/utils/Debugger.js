@@ -20,9 +20,9 @@ winston.addColors(config.colors);
 
 const myFormat = format.printf(data => `${data.timestamp} > ${data.level} > ${data.message} ${data.meta ? '>' : ''} ${data.meta ? JSON.stringify(data.meta) : ''}`);
 
-const LOGGER = createLogger({
+const DEBUGGER = createLogger({
 	levels: config.levels,
-	level: "DEBUG",
+	level: "INFO",
 	format: format.combine(
 		format.timestamp({
 			format: "DD-MM-YYYY HH:mm:ss"
@@ -35,20 +35,20 @@ const LOGGER = createLogger({
 		new transports.File({
 			maxsize: 1048576,
 			maxFiles: 5,
-			filename: `${__dirname}/../logs/discordbot.log`,
+			filename: `${__dirname}/../logs/discorddebug.log`,
 			level: "DEBUG"
 		})
 	]
 });
 
 if (process.env.NODE_ENV !== "production") {
-	LOGGER.add(new transports.Console({}));
+	DEBUGGER.add(new transports.Console({}));
 }
 
-LOGGER.error = (value) => LOGGER.ERROR(value);
-LOGGER.info = (value) => LOGGER.INFO(value);
-LOGGER.warn = (value) => LOGGER.WARN(value);
-LOGGER.debug = (value) => LOGGER.DEBUG(value);
+DEBUGGER.error = (value) => DEBUGGER.ERROR(value);
+DEBUGGER.info = (value) => DEBUGGER.INFO(value);
+DEBUGGER.warn = (value) => DEBUGGER.WARN(value);
+DEBUGGER.debug = (value) => DEBUGGER.DEBUG(value);
 
-module.exports = LOGGER;
+module.exports = DEBUGGER;
 

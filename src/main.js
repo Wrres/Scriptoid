@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Client, Intents } = require("discord.js");
+const { Client, Intents, Permissions } = require("discord.js");
 const runServer = require("./Server");
 
 const Round = require("./utils/Round");
@@ -9,7 +9,10 @@ const RoundImage = require("./utils/RoundImage");
 const RoundMap = require("./utils/RoundMap");
 const HELPERS = require("./utils/Helpers");
 const LOGGER = require("./utils/Logger");
+const DEBUGGER = require("./utils/Debugger");
+const BEATINFO = require("./utils/BeatInfo");
 const FC = require("./utils/FilesCleaner");
+const RESTART = require("./utils/Restart");
 
 const CYRILLIC = require("./sets/cyrillic.js");
 const CYRBALKAN = require("./sets/cyrbalkan.js");
@@ -52,6 +55,11 @@ const KRCITIES = require("./sets/krcities.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
 const USFLAGS = require("./sets/usflags.js");
+const BOLLARDS = require("./sets/bollards.js");
+const CAMERAS = require("./sets/cameras.js");
+const USSHIELDS = require("./sets/usshields.js");
+const USSECONDARY = require("./sets/ussecondary.js");
+const CASHIELDS = require("./sets/cashields.js");
 const CITYGUESS = require("./sets/cityguess.js");
 const CITYMAP = require("./sets/citymap.js");
 const CGTEST = require("./sets/cgtest.js");
@@ -61,11 +69,55 @@ const IGNORES = ["@", "!", "<"];
 // Holding to channels where the bot is running and it's data for each
 let CHANNELS = [];
 
+let BEAT = 0;
+
+// BEAT every 10 seconds
+setInterval(() => {
+	BEAT++;
+	checkBeat();
+}, 10000);
+
 const CLIENT = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
 CLIENT.on("ready", () => {
 	LOGGER.info(`Logged in as ${CLIENT.user.tag}!`);
 	CLIENT.user.setActivity("he!p for help", { type: "PLAYING" });
+});
+
+CLIENT.on("debug", (debug) => {  
+	if(!debug.includes("[HeartbeatTimer]") && !debug.includes("Heartbeat acknowledged")){
+		DEBUGGER.debug(debug);		
+	}
+	if(debug.includes("Heartbeat acknowledged")){
+		BEATINFO.info(debug);
+		BEAT = 0;
+	}
+	if(debug.includes("Hit a 429 while executing a request")){
+		DEBUGGER.debug("ERROR 429");
+		DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
+		setTimeout(() => {
+			RESTART.init();			
+		}, 5000);
+	}
+});
+
+CLIENT.on("invalidRequestWarning", (warning) => {
+	DEBUGGER.debug("***invalidRequestWarning***");
+	DEBUGGER.debug(warning);
+});
+
+CLIENT.on("rateLimit", (limit) => {
+	DEBUGGER.debug("***rateLimit***");
+	DEBUGGER.debug(limit);
+	DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
+		setTimeout(() => {
+			RESTART.init();			
+		}, 5000);
+});
+
+CLIENT.on("warn", (warn) => {
+	DEBUGGER.debug("***warn***");
+	DEBUGGER.debug(warn);
 });
 
 CLIENT.on("error", (error) => {
@@ -81,8 +133,15 @@ CLIENT.on("invalidated", (invalidated) => {
 });
 
 CLIENT.on("messageCreate", async (msg) => {
-	if (msg.author.bot) return
+	if (msg.author.bot) {
+		return;
+	}
 
+	// CHECK PERMISSIONS (If we don't have them > return)
+	if(!msg.channel.permissionsFor(msg.guild.me).has([Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.ADD_REACTIONS])) {
+		return;
+	}
+		
 	// HELP
 	else if (msg.content.toLowerCase() === "he!p") {
 		HELPERS.sendHelpMessage(msg);
@@ -101,6 +160,11 @@ CLIENT.on("messageCreate", async (msg) => {
 	// MAP
 	else if (msg.content.toLowerCase() === "!map") {
 		HELPERS.sendMapMessage(msg);
+	}
+
+  // CITYMAP HELP
+	else if (msg.content.toLowerCase() === "!cmhelp") {
+		HELPERS.sendCitymapMessage(msg);
 	}
 
 	// VERSION
@@ -202,7 +266,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!jpcities")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, JPCITIES) });
 		}
-    // JPTOWNS
+    	// JPTOWNS
 		else if (msg.content.toLowerCase().startsWith("!jptowns")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, JPTOWNS) });
 		}
@@ -274,6 +338,26 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!usflags")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USFLAGS) });
 		}
+		// BOLLARDS
+		else if (msg.content.toLowerCase().startsWith("!bollards")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, BOLLARDS) });
+		}
+		// CAMERAS
+		else if (msg.content.toLowerCase().startsWith("!cameras")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, CAMERAS) });
+		}
+		// USSHIELDS
+		else if (msg.content.toLowerCase().startsWith("!usshields")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USSHIELDS) });
+		}
+		// USSECONDARY
+		else if (msg.content.toLowerCase().startsWith("!ussecondary")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, USSECONDARY) });
+		}
+		// CASHIELDS
+		else if (msg.content.toLowerCase().startsWith("!cashields")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, CASHIELDS) });
+		}
 		// CITYGUESS
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
@@ -282,7 +366,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!cgt")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CGTEST) });
 		}
-    // CITYMAP
+	    // CITYMAP
 		else if (msg.content.toLowerCase().startsWith("!citymap")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundMap(msg, CITYMAP) });
 		}
@@ -377,12 +461,24 @@ function removeChannelFromChannels(id) {
 	CHANNELS = CHANNELS.filter((channel) => { return channel.id != id; });
 }
 
+/**
+ * Beat checker
+ */
+function checkBeat() {
+	if(BEAT > 12){
+		DEBUGGER.debug("No heartbeat received for over 120 seconds");
+		DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
+		setTimeout(() => {
+			RESTART.init();			
+		}, 5000);
+	}
+}
+
 runServer().then(() => {
-	console.log(`${HELPERS.formatDate(new Date())} · Login attempt`);
+	LOGGER.info("Login attempt");
 	CLIENT.login(process.env.TOKEN);
 });
 
 // This triggers the file cleaner
 FC.startCleaner();
 
-// CLIENT.login(process.env.TOKEN);

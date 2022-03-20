@@ -4,7 +4,7 @@ const FS = require("fs");
 
 const HELPERS = require("./Helpers");
 
-const URL = "https://scriptoid.alokk.repl.co/";
+const URL = process.env.BASE_URL;
 
 class RoundMap {
 	constructor(msg, language) {

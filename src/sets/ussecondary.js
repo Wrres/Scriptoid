@@ -1,0 +1,38 @@
+const USSECONDARY = {
+	"title": "Guess the state",
+	"footer": "Guess the state the secondary highway shield is from.",
+	"sets": [
+    { "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Arizona_101.svg/600px-Arizona_101.svg.png", "answers": ["Arizona", "AZ"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/MO-supp-M.svg/480px-MO-supp-M.svg.png", "answers": ["Missouri", "MO"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/MT-sec-236.svg/480px-MT-sec-236.svg.png", "answers": ["Montana", "MT"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/N_LINK_25A.svg/480px-N_LINK_25A.svg.png", "answers": ["Nebraska", "NE"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/N_REC_82B.svg/480px-N_REC_82B.svg.png", "answers": ["Nebraska", "NE"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/PA_QR_3032.svg/480px-PA_QR_3032.svg.png", "answers": ["Pennsylvania", "PA"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Secondary_Tennessee_14.svg/480px-Secondary_Tennessee_14.svg.png", "answers": ["Tennessee", "TN"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle_sign_35.svg/480px-Circle_sign_35.svg.png", "answers": ["Vermont", "VT"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Circle_sign_620.svg/480px-Circle_sign_620.svg.png", "answers": ["Virginia", "VA"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Texas_FM_1960.svg/480px-Texas_FM_1960.svg.png", "answers": ["Texas", "TX"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Texas_NASA_Road_1.svg/480px-Texas_NASA_Road_1.svg.png", "answers": ["Texas", "TX"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Clark_County_Route_215_NV.svg/480px-Clark_County_Route_215_NV.svg.png", "answers": ["Nevada", "NV"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Circle_sign_9-1.svg/480px-Circle_sign_9-1.svg.png", "answers": ["West Virginia", "WV"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/WIS_County_Z.svg/480px-WIS_County_Z.svg.png", "answers": ["Wisconsin", "WI"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg/480px-Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg.png", "answers": ["Ohio", "OH"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Arizona_101.svg/600px-Arizona_101.svg.png", "answers": ["Arizona", "AZ"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/MO-supp-M.svg/480px-MO-supp-M.svg.png", "answers": ["Missouri", "MO"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/MT-sec-236.svg/480px-MT-sec-236.svg.png", "answers": ["Montana", "MT"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/N_LINK_25A.svg/480px-N_LINK_25A.svg.png", "answers": ["Nebraska", "NE"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/N_REC_82B.svg/480px-N_REC_82B.svg.png", "answers": ["Nebraska", "NE"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/PA_QR_3032.svg/480px-PA_QR_3032.svg.png", "answers": ["Pennsylvania", "PA"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Secondary_Tennessee_14.svg/480px-Secondary_Tennessee_14.svg.png", "answers": ["Tennessee", "TN"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle_sign_35.svg/480px-Circle_sign_35.svg.png", "answers": ["Vermont", "VT"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Circle_sign_620.svg/480px-Circle_sign_620.svg.png", "answers": ["Virginia", "VA"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Texas_FM_1960.svg/480px-Texas_FM_1960.svg.png", "answers": ["Texas", "TX"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Texas_NASA_Road_1.svg/480px-Texas_NASA_Road_1.svg.png", "answers": ["Texas", "TX"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Clark_County_Route_215_NV.svg/480px-Clark_County_Route_215_NV.svg.png", "answers": ["Nevada", "NV"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Circle_sign_9-1.svg/480px-Circle_sign_9-1.svg.png", "answers": ["West Virginia", "WV"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/WIS_County_Z.svg/480px-WIS_County_Z.svg.png", "answers": ["Wisconsin", "WI"] },
+	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg/480px-Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg.png", "answers": ["Ohio", "OH"] },
+  ]
+};
+
+module.exports = USSECONDARY;

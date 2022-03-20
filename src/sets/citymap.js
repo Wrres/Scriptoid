@@ -1242,16 +1242,6 @@ const CITYMAP = {
 			"lon": -70.69703
 		},
 		{
-			"city": "Boumerdas",
-			"lat": 36.76639,
-			"lon": 3.47717
-		},
-		{
-			"city": "Tebessa",
-			"lat": 35.40417,
-			"lon": 8.12417
-		},
-		{
 			"city": "Oran",
 			"lat": 35.69906,
 			"lon": -0.63588

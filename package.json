@@ -4,7 +4,8 @@
   "description": "Scяiptoid",
   "main": "src/main.js",
   "scripts": {
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "test": "node_modules/.bin/node src/LocalTests.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
