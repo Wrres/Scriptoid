@@ -54,15 +54,15 @@ class RoundMap {
 		// https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png
 		// https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}
 		const OPTIONS = {
-			width: 960,
-			height: 520,
+			width: 720,
+			height: 404,
 			subdomains: ["mt0", "mt1", "mt2", "mt3"],
 			tileUrl: "https://{s}.google.com/vt/lyrs=s,t&x={x}&y={y}&z={z}"
 		};
 
 		const NM_OPTIONS = {
-			width: 960,
-			height: 520,
+			width: 720,
+			height: 404,
 			subdomains: "abcd",
 			minZoom: 1,
 			maxZoom: 8,
@@ -73,16 +73,16 @@ class RoundMap {
 		};
 
 		const DM_OPTIONS = {
-			width: 960,
-			height: 520,
+			width: 720,
+			height: 404,
 			tileUrl: "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
 			subdomains: "abcd",
 			maxZoom: 20
 		};
 
 		const TM_OPTIONS = {
-			width: 960,
-			height: 520,
+			width: 720,
+			height: 404,
 			tileUrl: "https://stamen-tiles-a.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png",
 			subdomains: "abcd",
 			ext: "png"
