@@ -1,5 +1,5 @@
 .env
 node_modules/
 src/public/citymap/
-src/logs/*
+src/logs/
 package-lock.json
