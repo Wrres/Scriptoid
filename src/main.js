@@ -483,3 +483,5 @@ runServer().then(() => {
 // This triggers the file cleaner
 FC.startCleaner();
 
+console.log(process.env.TOKEN);
+
