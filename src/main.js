@@ -1,17 +1,10 @@
 require("dotenv").config();
 const { Client, Intents, Permissions } = require("discord.js");
-const runServer = require("./Server");
 
 const Round = require("./utils/Round");
-const RoundCity = require("./utils/RoundCity");
-const RoundGuess = require("./utils/RoundGuess");
 const RoundImage = require("./utils/RoundImage");
-const RoundMap = require("./utils/RoundMap");
 const HELPERS = require("./utils/Helpers");
-const LOGGER = require("./utils/Logger");
-const DEBUGGER = require("./utils/Debugger");
-const BEATINFO = require("./utils/BeatInfo");
-const FC = require("./utils/FilesCleaner");
+
 const RESTART = require("./utils/Restart");
 
 const CYRILLIC = require("./sets/cyrillic.js");
@@ -60,9 +53,6 @@ const CAMERAS = require("./sets/cameras.js");
 const USSHIELDS = require("./sets/usshields.js");
 const USSECONDARY = require("./sets/ussecondary.js");
 const CASHIELDS = require("./sets/cashields.js");
-/*const CITYGUESS = require("./sets/cityguess.js");
-const CITYMAP = require("./sets/citymap.js");
-const CGTEST = require("./sets/cgtest.js");*/
 
 // Ignore messages starting with (from scores)
 const IGNORES = ["@", "!", "<"];
@@ -72,62 +62,41 @@ let CHANNELS = [];
 let BEAT = 0;
 
 // BEAT every 10 seconds
-setInterval(() => {
-	BEAT++;
-	checkBeat();
-}, 10000);
+// setInterval(() => {
+// 	BEAT++;
+// 	checkBeat();
+// }, 10000);
 
 const CLIENT = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
 CLIENT.on("ready", () => {
-	LOGGER.info(`Logged in as ${CLIENT.user.tag}!`);
+	console.log(`Logged in as ${CLIENT.user.tag}!`);
 	CLIENT.user.setActivity("he!p for help", { type: "PLAYING" });
 });
 
-CLIENT.on("debug", (debug) => {  
-	if(!debug.includes("[HeartbeatTimer]") && !debug.includes("Heartbeat acknowledged")){
-		DEBUGGER.debug(debug);		
-	}
+CLIENT.on("debug", (debug) => {
 	if(debug.includes("Heartbeat acknowledged")){
-		BEATINFO.info(debug);
 		BEAT = 0;
 	}
 	if(debug.includes("Hit a 429 while executing a request")){
-		DEBUGGER.debug("ERROR 429");
-		DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
 		setTimeout(() => {
 			RESTART.init();			
 		}, 5000);
 	}
 });
 
-CLIENT.on("invalidRequestWarning", (warning) => {
-	DEBUGGER.debug("***invalidRequestWarning***");
-	DEBUGGER.debug(warning);
-});
-
 CLIENT.on("rateLimit", (limit) => {
-	DEBUGGER.debug("***rateLimit***");
-	DEBUGGER.debug(limit);
-	DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
-		setTimeout(() => {
-			RESTART.init();			
-		}, 5000);
-});
-
-CLIENT.on("warn", (warn) => {
-	DEBUGGER.debug("***warn***");
-	DEBUGGER.debug(warn);
+	setTimeout(() => {
+		RESTART.init();			
+	}, 5000);
 });
 
 CLIENT.on("error", (error) => {
-	LOGGER.error(`Error: ${error}`);
 	CLIENT.destroy();
 	CLIENT.login(process.env.TOKEN);
 });
 
 CLIENT.on("invalidated", (invalidated) => {
-	LOGGER.error(`Invalidated: ${invalidated}`);
 	CLIENT.destroy();
 	CLIENT.login(process.env.TOKEN);
 });
@@ -146,26 +115,6 @@ CLIENT.on("messageCreate", async (msg) => {
 	else if (msg.content.toLowerCase() === "he!p") {
 		HELPERS.sendHelpMessage(msg);
 	}
-
-	/*// CITYCOUNTRY HELP
-	else if (msg.content.toLowerCase() === "!cchelp") {
-		HELPERS.sendCityMessage(msg);
-	}
-
-	// CITYGUESS HELP
-	else if (msg.content.toLowerCase() === "!cghelp") {
-		HELPERS.sendGuessMessage(msg);
-	}
-
-	// MAP
-	else if (msg.content.toLowerCase() === "!map") {
-		HELPERS.sendMapMessage(msg);
-	}
-
-  // CITYMAP HELP
-	else if (msg.content.toLowerCase() === "!cmhelp") {
-		HELPERS.sendCitymapMessage(msg);
-	}*/
 
 	// VERSION
 	else if (msg.content.toLowerCase() === "!version") {
@@ -358,23 +307,6 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!cashields")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, CASHIELDS) });
 		}
-		/*// CITYGUESS
-		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
-			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
-		}
-		// CGTEST
-		else if (msg.content.toLowerCase().startsWith("!cgt")) {
-			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CGTEST) });
-		}
-	    // CITYMAP
-		else if (msg.content.toLowerCase().startsWith("!citymap")) {
-			//msg.channel.send("Gamemode Temporarily unavailable");
-			CHANNELS.push({ "id": msg.channel.id, "round": new RoundMap(msg, CITYMAP) });
-		}
-		// CITYCOUNTRY
-		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
-			CHANNELS.push({ "id": msg.channel.id, "round": new RoundCity(msg, CITYGUESS) });
-		}*/
 	}
 
 	// CHECK IF THERE IS AN ACTIVE ROUND ON THE CHANNEL
@@ -399,18 +331,6 @@ CLIENT.on("messageCreate", async (msg) => {
 				round.end();
 			}
 		}
-
-		/*// PIC
-		if (msg.content.toLowerCase() === "!pic") {
-			// First we need to check if there is a round active in this channel
-			if (channelContainsActiveGame(msg.channel.id)) {
-				// There is one, we need to get it's object and call answer
-				let round = getRoundForChannelId(msg.channel.id);
-				if(round.pic){
-					round.pic();
-				}
-			}
-		}*/
 
 		else if (!IGNORES.includes(msg.content.charAt(0))) {
 			// First we need to check if there is a round active in this channel
@@ -466,18 +386,11 @@ function removeChannelFromChannels(id) {
  */
 function checkBeat() {
 	if(BEAT > 12){
-		DEBUGGER.debug("No heartbeat received for over 120 seconds");
-		DEBUGGER.debug("ATTEMPTING RESTART IN 5 SECONDS");
 		setTimeout(() => {
 			RESTART.init();			
 		}, 5000);
 	}
 }
 
-runServer().then(() => {
-	LOGGER.info("Login attempt");
-	CLIENT.login(process.env.TOKEN);
-});
+CLIENT.login(process.env.TOKEN);
 
-// This triggers the file cleaner
-FC.startCleaner();
