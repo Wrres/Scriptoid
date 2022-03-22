@@ -60,9 +60,9 @@ const CAMERAS = require("./sets/cameras.js");
 const USSHIELDS = require("./sets/usshields.js");
 const USSECONDARY = require("./sets/ussecondary.js");
 const CASHIELDS = require("./sets/cashields.js");
-const CITYGUESS = require("./sets/cityguess.js");
+/*const CITYGUESS = require("./sets/cityguess.js");
 const CITYMAP = require("./sets/citymap.js");
-const CGTEST = require("./sets/cgtest.js");
+const CGTEST = require("./sets/cgtest.js");*/
 
 // Ignore messages starting with (from scores)
 const IGNORES = ["@", "!", "<"];
@@ -147,7 +147,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		HELPERS.sendHelpMessage(msg);
 	}
 
-	// CITYCOUNTRY HELP
+	/*// CITYCOUNTRY HELP
 	else if (msg.content.toLowerCase() === "!cchelp") {
 		HELPERS.sendCityMessage(msg);
 	}
@@ -165,7 +165,7 @@ CLIENT.on("messageCreate", async (msg) => {
   // CITYMAP HELP
 	else if (msg.content.toLowerCase() === "!cmhelp") {
 		HELPERS.sendCitymapMessage(msg);
-	}
+	}*/
 
 	// VERSION
 	else if (msg.content.toLowerCase() === "!version") {
@@ -358,7 +358,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!cashields")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundImage(msg, CASHIELDS) });
 		}
-		// CITYGUESS
+		/*// CITYGUESS
 		else if (msg.content.toLowerCase().startsWith("!cityguess")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundGuess(msg, CITYGUESS) });
 		}
@@ -374,7 +374,7 @@ CLIENT.on("messageCreate", async (msg) => {
 		// CITYCOUNTRY
 		else if (msg.content.toLowerCase().startsWith("!citycountry")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new RoundCity(msg, CITYGUESS) });
-		}
+		}*/
 	}
 
 	// CHECK IF THERE IS AN ACTIVE ROUND ON THE CHANNEL
@@ -400,7 +400,7 @@ CLIENT.on("messageCreate", async (msg) => {
 			}
 		}
 
-		// PIC
+		/*// PIC
 		if (msg.content.toLowerCase() === "!pic") {
 			// First we need to check if there is a round active in this channel
 			if (channelContainsActiveGame(msg.channel.id)) {
@@ -410,9 +410,8 @@ CLIENT.on("messageCreate", async (msg) => {
 					round.pic();
 				}
 			}
-		}
+		}*/
 
-		// TODO: Anything else that isn't a predefined command should get filtered here and act accordingly
 		else if (!IGNORES.includes(msg.content.charAt(0))) {
 			// First we need to check if there is a round active in this channel
 			if (channelContainsActiveGame(msg.channel.id)) {

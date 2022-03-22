@@ -1,6 +1,7 @@
-console.log("TEST");
-
+const NATC = require("./libraries/NotAllTheCities");
 const HELPERS = require("./utils/Helpers");
+
+console.log(NATC.getAll().length);
 
 const CITY = {
 				"city": "Traralgon",
@@ -31,12 +32,12 @@ async function testCityguessCity(){
 	return imageData;
 }
 
-testCityguessCity()
-.then((data) => {
-	console.log(data);
-})
-.catch((error) => {
-	console.log(error);
-});
+// testCityguessCity()
+// .then((data) => {
+// 	console.log(data);
+// })
+// .catch((error) => {
+// 	console.log(error);
+// });
 
 

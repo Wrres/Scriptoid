@@ -24,7 +24,7 @@ const HELPERS = {
 	sendHelpMessage: (msg) => {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
-			.setTitle("Help")
+			.setTitle("Scяiptoid Help")
 			.setDescription(`
 			Write the transliteration of the given letter in Latin.
 			You will have ${HELPERS.SECONDS_BEFORE_REVEAL} seconds to provide the correct answer.
@@ -61,9 +61,6 @@ const HELPERS = {
 			\`!jpareacodes #\` - Japanese area codes \`!jpcodesmap\`
 			\`!cnareacodes #\` - Chinese provincial area codes
 			\`!cnplates #\` - Chinese provincial license plates
-			\`!cityguess #\` - \`!cghelp\` for info and details \`!map\` \`!pic\`
-			\`!citycountry #\` - \`!cchelp\` for info and details
-      		\`!citymap #\` - \`!cmhelp\` for info and details
 			\`!answer\` - reveals the answer
 			\`!end\` - ends the current game
 			If a letter isn\'t transliterated, put \`-\`.
