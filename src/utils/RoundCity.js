@@ -56,7 +56,7 @@ class RoundCity {
 				const messageEmbed = new MessageEmbed()
 					.setColor("#0099ff")
 					.setTitle(`${this.currentSet.city}`)
-					.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}`);
+					.setFooter({ "text": `Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${elevation}\n${footer}` });
 				this.channel.send({ "embeds": [messageEmbed] });
 			})
 			.catch((error) => {

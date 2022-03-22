@@ -94,12 +94,12 @@ class RoundGuess {
 			}
 			// console.log(`${HELPERS.formatDate(new Date())} · IMAGE: ${imageData.image}`);
 			messageEmbed.setImage(imageData.image);
-			messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}${imageData.distance}\n${footer}`);
+			messageEmbed.setFooter({ "text": `Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}${imageData.distance}\n${footer}` });
 			this.channel.send({ "embeds": [messageEmbed] });
 		}
 		else {
 			// console.log("${HELPERS.formatDate(new Date())} · No image found");
-			messageEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}\n${footer}`);
+			messageEmbed.setFooter({ "text": `Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}\n${footer}` });
 			this.channel.send({ "embeds": [messageEmbed] });
 		}
 	}
@@ -199,10 +199,10 @@ class RoundGuess {
 				picEmbed.setTitle(`Nearby image${imageData.distance}`);
 				picEmbed.setImage(imageData.image);
 				if (this.nn) {
-					picEmbed.setFooter(`Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
+					picEmbed.setFooter({ "text": `Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}` });
 				}
 				else {
-					picEmbed.setFooter(`${this.currentSet.city} · Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}`);
+					picEmbed.setFooter({ "text": `${this.currentSet.city} · Pop: ${HELPERS.numberWithCommas(this.currentSet.pop)}${this.currentSet.altitude}` });
 				}
 				this.channel.send({ "embeds": [picEmbed] });
 			}
@@ -364,7 +364,11 @@ class RoundGuess {
 
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
-			.setAuthor("Google Maps 🔗", "https://i.imgur.com/3p5i1wt.png", `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`)
+			.setAuthor({
+				"name": "Google Maps 🔗",
+				"url": `https://www.google.com/maps/@${this.currentSet.lat},${this.currentSet.lon},14z`,
+				"iconURL": "https://i.imgur.com/3p5i1wt.png"
+			})
 			.addField(`:flag_${this.currentSet.country[0].toLowerCase()}: ${this.currentSet.country[1]}`, `${this.currentSet.city} · ${this.currentSet.sub}`, true);
 		if (roundSummary) {
 			messageEmbed.setTitle("Round scores");

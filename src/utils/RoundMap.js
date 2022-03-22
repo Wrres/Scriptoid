@@ -140,7 +140,7 @@ class RoundMap {
 				const messageEmbed = new MessageEmbed()
 				.setColor("#0099ff")
 				.setImage(URL + path)
-				.setFooter(footer);
+				.setFooter({ "text": footer });
 			this.channel.send({"embeds": [messageEmbed]});
 			this.imagePosted = true;
 			})

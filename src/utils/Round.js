@@ -49,7 +49,7 @@ class Round {
 		const messageEmbed = new MessageEmbed()
 			.setColor("#0099ff")
 			.setTitle(`${this.currentSet.letter}`)
-			.setFooter(footer);
+			.setFooter({ "text": footer });
 			if(this.currentSet.flag){
 				messageEmbed.setImage(this.currentSet.flag);
 			}

@@ -2,3 +2,4 @@
 node_modules/
 src/public/citymap/
 src/logs/*
+package-lock.json

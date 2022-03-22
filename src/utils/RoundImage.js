@@ -45,7 +45,7 @@ class RoundImage {
 			.setColor("#0099ff")
 			.setTitle(this.language.title)
 			.setImage(this.currentSet.letter)
-			.setFooter(footer);
+			.setFooter({ "text": footer });
 		this.channel.send({"embeds": [messageEmbed]});
 	}
 
