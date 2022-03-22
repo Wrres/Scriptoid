@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "find-remove": "^4.0.4",
     "node-fetch": "^2.6.7",
-    "staticmaps": "^1.7.0",
+    "staticmaps": "^1.9.1",
     "winston": "^3.5.0"
   },
   "keywords": [],
