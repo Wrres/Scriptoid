@@ -46,7 +46,7 @@ const HELPERS = {
 			\`!rucities #\` - Russian cities 50k+ pop. \`!rutowns\`
 			\`!krcities #\` - South and North Korean cities
 			\`!grplaces #\` - Greek place names (not only Greece)
-			Non-language commands (GeoGuessr/geography):
+			Non-language commands (GeoGuessr/geo practice):
 			\`!uscapitals #\` - US state capitals \`!usflags\`
 			\`!bollards #\` - guess the country the bollard is from
 			\`!cameras #\` - guess the camera gens in the country
