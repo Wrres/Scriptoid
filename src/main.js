@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { Client, Intents, Permissions } = require("discord.js");
+const runServer = require("./Server")
 
 const Round = require("./utils/Round");
 const RoundImage = require("./utils/RoundImage");
@@ -392,5 +393,7 @@ function checkBeat() {
 	}
 }
 
-CLIENT.login(process.env.TOKEN);
+runServer().then(() => {
+	CLIENT.login(process.env.TOKEN);
+});
 
