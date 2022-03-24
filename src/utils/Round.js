@@ -12,6 +12,8 @@ class Round {
 		this.users = [];
 		this.inactivityTimeout;
 		this.nextRoundTimeout;
+		this.reactWrongs = [];
+		this.reactWrongsInterval = null;
 
 		this.sendRandomCharacter(msg);
 	}
@@ -31,6 +33,13 @@ class Round {
 			}
 			this.resetRound(msg);
 		}, HELPERS.SECONDS_BEFORE_REVEAL * 1000);
+
+		this.reactWrongsInterval = setInterval(() => {
+			let message = this.reactWrongs.shift();
+			if(message){
+				message.react("❌");
+			}
+		}, 1000);
 
 		// Decrement rounds left
 		this.rounds--;
@@ -103,7 +112,8 @@ class Round {
 			}
 			else{
 				this.addIncorrect(msg);
-				msg.react("❌");
+				this.reactWrongs.push(msg);
+				//msg.react("❌");
 			}
 		}
 	}
@@ -208,6 +218,7 @@ class Round {
 				.setDescription(summary);
 			this.channel.send({"embeds": [messageEmbed]});
 		}
+		clearInterval(this.reactWrongsInterval);
 		HELPERS.EMITTER.emit("delete-channel", this.channel.id);
 	}
 

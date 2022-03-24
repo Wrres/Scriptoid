@@ -6,7 +6,7 @@ const Round = require("./utils/Round");
 const RoundImage = require("./utils/RoundImage");
 const HELPERS = require("./utils/Helpers");
 
-const RESTART = require("./utils/Restart");
+//const RESTART = require("./utils/Restart");
 
 const CYRILLIC = require("./sets/cyrillic.js");
 const CYRBALKAN = require("./sets/cyrbalkan.js");
@@ -80,16 +80,16 @@ CLIENT.on("debug", (debug) => {
 		BEAT = 0;
 	}
 	if(debug.includes("Hit a 429 while executing a request")){
-		setTimeout(() => {
-			RESTART.init();			
-		}, 5000);
+		// setTimeout(() => {
+		// 	RESTART.init();			
+		// }, 5000);
 	}
 });
 
 CLIENT.on("rateLimit", (limit) => {
-	setTimeout(() => {
-		RESTART.init();			
-	}, 5000);
+	// setTimeout(() => {
+	// 	RESTART.init();			
+	// }, 5000);
 });
 
 CLIENT.on("error", (error) => {
@@ -385,13 +385,13 @@ function removeChannelFromChannels(id) {
 /**
  * Beat checker
  */
-function checkBeat() {
-	if(BEAT > 12){
-		setTimeout(() => {
-			RESTART.init();			
-		}, 5000);
-	}
-}
+// function checkBeat() {
+// 	if(BEAT > 12){
+// 		setTimeout(() => {
+// 			RESTART.init();			
+// 		}, 5000);
+// 	}
+// }
 
 runServer().then(() => {
 	CLIENT.login(process.env.TOKEN);
