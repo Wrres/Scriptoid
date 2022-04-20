@@ -28,10 +28,12 @@ const USSECONDARY = {
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Circle_sign_620.svg/480px-Circle_sign_620.svg.png", "answers": ["Virginia", "VA"] },
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Texas_FM_1960.svg/480px-Texas_FM_1960.svg.png", "answers": ["Texas", "TX"] },
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Texas_NASA_Road_1.svg/480px-Texas_NASA_Road_1.svg.png", "answers": ["Texas", "TX"] },
-	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Clark_County_Route_215_NV.svg/480px-Clark_County_Route_215_NV.svg.png", "answers": ["Nevada", "NV"] },
+	{ "letter": "https://i.imgur.com/ESAjAao.png", "answers": ["Nevada", "NV"] },
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Circle_sign_9-1.svg/480px-Circle_sign_9-1.svg.png", "answers": ["West Virginia", "WV"] },
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/WIS_County_Z.svg/480px-WIS_County_Z.svg.png", "answers": ["Wisconsin", "WI"] },
 	{ "letter": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg/480px-Harmony_Township_Route_92%2C_Morrow_County%2C_Ohio.svg.png", "answers": ["Ohio", "OH"] },
+	{ "letter": "https://i.imgur.com/czWJeY1.png", "answers": ["Ohio", "OH"] },
+	{ "letter": "https://i.imgur.com/NqI9oY8.jpg", "answers": ["Ohio", "OH"] },
   ]
 };
 
