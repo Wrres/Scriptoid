@@ -1,0 +1,35 @@
+const LETTERGUESSCYR = {
+	"footer": "Write a language the letter is from.",
+	"sets": [
+    { "letter": "Ґ (ґ)", "answers": ["Ukrainian"] },
+	{ "letter": "Ѓ (ѓ)", "answers": ["Macedonian"] },
+	{ "letter": "Ђ (ђ)", "answers": ["Serbian", "Montenegrin"] },
+	{ "letter": "Є (є)", "answers": ["Ukrainian"] },
+	{ "letter": "Ё (ё)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Belarusian"] },
+	{ "letter": "З́ (з́)", "answers": ["Montenegrin"] },
+	{ "letter": "Ѕ (ѕ)", "answers": ["Macedonian"] },
+	{ "letter": "Й (й)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Ukrainian", "Belarusian", "Bulgarian"] },
+	{ "letter": "І (і)", "answers": ["Ukrainian", "Belarusian"] },
+	{ "letter": "Ї (ї)", "answers": ["Ukrainian", "Belarusian"] },
+	{ "letter": "Ј (ј)", "answers": ["Macedonian", "Serbian", "Montenegrin"] },
+	{ "letter": "Ќ (ќ)", "answers": ["Macedonian"] },
+	{ "letter": "Љ (љ)", "answers": ["Macedonian", "Serbian", "Montenegrin"] },
+	{ "letter": "Ң (ң)", "answers": ["Kyrgyz"] },
+	{ "letter": "Њ (њ)", "answers": ["Macedonian", "Serbian", "Montenegrin"] },
+	{ "letter": "Ө (ө)", "answers": ["Mongolian", "Kyrgyz"] },
+	{ "letter": "С́ (с́)", "answers": ["Montenegrin"] },
+	{ "letter": "Ћ (ћ)", "answers": ["Serbian", "Montenegrin"] },
+	{ "letter": "Ў (ў)", "answers": ["Belarusian"] },
+	{ "letter": "Ү (ү)", "answers": ["Mongolian", "Kyrgyz"] },
+	{ "letter": "Џ (џ)", "answers": ["Macedonian", "Serbian", "Montenegrin"] },
+	{ "letter": "Щ (щ)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Ukrainian", "Bulgarian"] },
+	{ "letter": "Ъ (ъ)", "answers": ["Russian", "Kyrgyz", "Bulgarian"] },
+	{ "letter": "Ы (ы)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Belarusian"] },
+	{ "letter": "Ь (ь)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Ukrainian", "Belarusian", "Bulgarian"] },
+	{ "letter": "Э (э)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Belarusian"] },
+	{ "letter": "Ю (ю)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Ukrainian", "Belarusian", "Bulgarian"] },
+	{ "letter": "Я (я)", "answers": ["Russian", "Mongolian", "Kyrgyz", "Ukrainian", "Belarusian", "Bulgarian"] },
+  ]
+};
+
+module.exports = LETTERGUESSCYR;

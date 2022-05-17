@@ -36,6 +36,8 @@ const HELPERS = {
 			\`!chinese1-5 #\` - grouped by HSK levels
 			\`!inuktitut #\` \`!inukwords #\` - 1500+ Inuktitut words
 			\`!indonesian #\` - 2k most common Indonesian words
+			\`!letterguess #\` - guess a language of the Latin letter
+			\`!letterguesscyr #\` - Cyrillic letter guess
 			\`!prefectures #\` - Japanese prefecture names
 			\`!jpcities #\` - Japanese cities 250k+ pop. \`!jpcitieshard\`
       		\`!jptowns #\` - Japanese towns and villages
@@ -44,7 +46,7 @@ const HELPERS = {
 			\`!cncities #\` - all Chinese cities
 			\`!thprovinces #\` - Thai provinces \`!thpvabbr\`
 			\`!rucities #\` - Russian cities 50k+ pop. \`!rutowns\`
-			\`!krcities #\` - South and North Korean cities
+			\`!krcities #\` - South and North Korean cities \`!krtowns\`
 			\`!grplaces #\` - Greek place names (not only Greece)
 			Non-language commands (GeoGuessr/geo practice):
 			\`!uscapitals #\` - US state capitals \`!usflags\`

@@ -135,7 +135,7 @@ const INDONESIAN = {
     { "letter": "diri", "answers": ["himself"] },
     { "letter": "sekitar", "answers": ["around"] },
     { "letter": "pintu", "answers": ["door"] },
-    { "letter": "untuk kekuatan", "answers": ["to might"] },
+    { "letter": "kekuatan", "answers": ["might"] },
     { "letter": "sesuatu", "answers": ["something"] },
     { "letter": "untuk mencoba", "answers": ["to try"] },
     { "letter": "mencintai", "answers": ["to love"] },

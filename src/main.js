@@ -28,6 +28,8 @@ const CHINESE5 = require("./sets/chinese5.js");
 const INUKTITUT = require("./sets/inuktitut.js");
 const INUKWORDS = require("./sets/inukwords.js");
 const INDONESIAN = require("./sets/indonesian.js");
+const LETTERGUESS = require("./sets/letterguess.js");
+const LETTERGUESSCYR = require("./sets/letterguesscyr.js");
 const PREFECTURES = require("./sets/prefectures.js");
 const JPCITIES = require("./sets/jpcities.js");
 const JPCITIESHARD = require("./sets/jpcitieshard.js");
@@ -46,6 +48,7 @@ const JPCODESMAP = require("./sets/jpcodesmap.js");
 const RUCITIES = require("./sets/rucities.js");
 const RUTOWNS = require("./sets/rutowns.js");
 const KRCITIES = require("./sets/krcities.js");
+const KRTOWNS = require("./sets/krtowns.js");
 const GRPLACES = require("./sets/grplaces.js");
 const USCAPITALS = require("./sets/uscapitals.js");
 const USFLAGS = require("./sets/usflags.js");
@@ -204,6 +207,14 @@ CLIENT.on("messageCreate", async (msg) => {
 		else if (msg.content.toLowerCase().startsWith("!indonesian")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, INDONESIAN) });
 		}
+		// LETTERGUESSCYR
+		else if (msg.content.toLowerCase().startsWith("!letterguesscyr")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, LETTERGUESSCYR) });
+		}
+		// LETTERGUESS
+		else if (msg.content.toLowerCase().startsWith("!letterguess")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, LETTERGUESS) });
+		}
 		// PREFECTURES
 		else if (msg.content.toLowerCase().startsWith("!prefectures")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, PREFECTURES) });
@@ -275,6 +286,10 @@ CLIENT.on("messageCreate", async (msg) => {
 		// KRCITIES
 		else if (msg.content.toLowerCase().startsWith("!krcities")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, KRCITIES) });
+		}
+		// KRTOWNS
+		else if (msg.content.toLowerCase().startsWith("!krtowns")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, KRTOWNS) });
 		}
 		// GRPLACES
 		else if (msg.content.toLowerCase().startsWith("!grplaces")) {
