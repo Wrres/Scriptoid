@@ -33,7 +33,7 @@ const HELPERS = {
 			\`!gujarati #\`
 			\`!bengali #\` \`!bdnumerals #\`
 			\`!japanese #\` - Hiragana/Katakana
-			\`!chinese1-5 #\` - grouped by HSK levels
+			\`!chinese1-6 #\` - grouped by HSK levels
 			\`!inuktitut #\` \`!inukwords #\` - 1500+ Inuktitut words
 			\`!indonesian #\` - 2k most common Indonesian words
 			\`!letterguess #\` - guess a language of the Latin letter

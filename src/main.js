@@ -25,6 +25,7 @@ const CHINESE2 = require("./sets/chinese2.js");
 const CHINESE3 = require("./sets/chinese3.js");
 const CHINESE4 = require("./sets/chinese4.js");
 const CHINESE5 = require("./sets/chinese5.js");
+const CHINESE6 = require("./sets/chinese6.js");
 const INUKTITUT = require("./sets/inuktitut.js");
 const INUKWORDS = require("./sets/inukwords.js");
 const INDONESIAN = require("./sets/indonesian.js");
@@ -194,6 +195,10 @@ CLIENT.on("messageCreate", async (msg) => {
 		// CHINESE5
 		else if (msg.content.toLowerCase().startsWith("!chinese5")) {
 			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, CHINESE5) });
+		}
+		// CHINESE6
+		else if (msg.content.toLowerCase().startsWith("!chinese6")) {
+			CHANNELS.push({ "id": msg.channel.id, "round": new Round(msg, CHINESE6) });
 		}
 		// INUKTITUT
 		else if (msg.content.toLowerCase().startsWith("!inuktitut")) {
